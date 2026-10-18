@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hazardo · Choix du look</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --display:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* Couleurs par défaut (palette 1, jour) ; le script les remplace selon le choix */
+  --bg:#FFF6E6;--text:#2A1838;--main:#D7263D;--accent:#FFB400;--soft:#FFE3CC;--on-main:#FFFFFF;
+  --w1:#D7263D;--w2:#FFB400;--w3:#1F6FD1;--w4:#FF8A00;--w5:#7B3FC4;--w6:#3CC47C;
+  --wt1:#fff;--wt2:#2A1838;--wt3:#fff;--wt4:#2A1838;--wt5:#fff;--wt6:#2A1838;
+  --line:color-mix(in srgb,var(--text) 14%,transparent);
+  --card:color-mix(in srgb,var(--soft) 45%,var(--bg));
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.5 var(--body);transition:background .3s,color .3s;padding-bottom:84px}
+h1,h2,h3,h4{font-family:var(--display);font-weight:400;line-height:1.1;margin:0}
+button{font:inherit;color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+header.top{display:flex;align-items:center;gap:12px;padding:18px 0 8px}
+header.top h1{font-size:clamp(1.7rem,5vw,2.4rem)}
+header.top .logo-slot{width:48px;height:48px;flex:none}
+header.top p{margin:2px 0 0;opacity:.8;font-size:.95rem}
+.grow{flex:1;min-width:0}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:10px 0 6px;font-size:.95rem}
+.intro ol{margin:6px 0 0;padding-left:20px}
+section{padding:26px 0 6px}
+section>h2{font-size:clamp(1.5rem,4.5vw,2rem);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+section>h2 small{font:700 .85rem var(--body);opacity:.7}
+.lead{margin:6px 0 14px;opacity:.85}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:14px;position:relative;transition:border-color .2s,box-shadow .2s}
+.card.chosen{border-color:var(--main);box-shadow:0 0 0 3px color-mix(in srgb,var(--main) 25%,transparent)}
+.pick{display:flex;align-items:center;gap:10px;font-weight:800;cursor:pointer;padding:6px 0;min-height:44px}
+.pick input{width:24px;height:24px;accent-color:var(--main);flex:none;margin:0}
+.card h3{font-size:1.45rem}
+.tag{margin:2px 0 10px;font-size:.92rem;opacity:.85}
+
+/* Interrupteur jour / nuit (effet 27) */
+.dn{position:relative;width:76px;height:40px;border-radius:999px;border:2px solid var(--line);background:#8fd3ff;cursor:pointer;flex:none;transition:background .4s;padding:0}
+.dn i{position:absolute;top:3px;left:3px;width:30px;height:30px;border-radius:50%;background:#FFC233;box-shadow:0 0 0 4px rgba(255,194,51,.35);transition:transform .45s cubic-bezier(.3,1.4,.5,1),background .4s,box-shadow .4s}
+.dn i::after{content:"";position:absolute;inset:0;border-radius:50%;background:#1d1640;transform:translate(14px,-10px) scale(0);transition:transform .45s}
+.dn[aria-pressed="true"]{background:#1d1640}
+.dn[aria-pressed="true"] i{transform:translateX(36px);background:#f4eedd;box-shadow:0 0 10px rgba(244,238,221,.5)}
+.dn[aria-pressed="true"] i::after{transform:translate(8px,-6px) scale(.85)}
+.dn-lbl{font-weight:800;font-size:.85rem;white-space:nowrap}
+
+/* Palettes */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{border-radius:14px;padding:10px;background:var(--bg);color:var(--text);border:1px solid var(--line)}
+.mode h4{font:800 .8rem var(--body);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.sw{display:flex;align-items:center;gap:8px;font-size:.78rem;line-height:1.2;margin:4px 0}
+.sw b{display:block;font-weight:800}
+.sw code{font-size:.75rem;opacity:.85}
+.sw span.c{width:26px;height:26px;border-radius:8px;flex:none;border:1px solid color-mix(in srgb,var(--text) 25%,transparent)}
+.checks{margin:10px 0 4px;font-size:.82rem;display:grid;gap:3px}
+.ok{color:inherit}
+.ok::before{content:"✓ ";font-weight:800;color:#1E9E5A}
+.mode .ok::before{color:inherit}
+.screens{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+
+/* Morceau d'écran d'accueil */
+.home{background:var(--bg);color:var(--text);border-radius:22px;padding:12px 10px 14px;text-align:center;border:1px solid var(--line);overflow:hidden}
+.home .hd{display:flex;align-items:center;justify-content:center;gap:6px;font:1.15rem var(--display)}
+.home .hd .logo-slot{width:26px;height:26px}
+.home .rn{display:inline-block;margin:6px 0 4px;padding:2px 12px;border-radius:999px;background:var(--soft);font-weight:800;font-size:.8rem}
+.home .wheelbox{position:relative;width:min(100%,170px);margin:6px auto 10px}
+.btn-main{display:inline-block;border:0;border-radius:999px;padding:12px 26px;background:var(--main);color:var(--on-main);font:1.15rem var(--display);letter-spacing:.02em;cursor:pointer;box-shadow:0 5px 0 color-mix(in srgb,var(--main) 60%,#000);transition:transform .15s}
+.btn-main:active{transform:translateY(3px) scale(.97);box-shadow:0 2px 0 color-mix(in srgb,var(--main) 60%,#000)}
+.home .btn-main{padding:9px 20px;font-size:1rem}
+.home .sec{display:block;margin-top:10px;font-size:.78rem;font-weight:700;text-decoration:underline;opacity:.85}
+
+/* Roue + flèche */
+.wheelbox{position:relative}
+.wheelbox svg.wheel{display:block;width:100%;height:auto;border-radius:50%}
+.wheelbox .arrow{position:absolute;left:50%;top:-6px;width:18%;transform:translateX(-50%);z-index:2;transform-origin:50% 20%}
+.wheel text{font-family:var(--display);font-size:11px}
+
+/* Logos */
+.logo-big{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lbox{border-radius:16px;padding:12px;background:var(--bg);color:var(--text);border:1px solid var(--line);display:grid;place-items:center;gap:8px}
+.lbox .big{width:min(120px,100%)}
+.lbox .row{display:flex;align-items:center;gap:12px;font-size:.75rem;font-weight:700}
+.lbox .s32{width:32px;height:32px}
+.lbox .icon{width:60px;height:60px;border-radius:14px;background:var(--soft);display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.lbox .icon svg{width:46px;height:46px}
+.lbox .tabbar{display:flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--text) 10%,transparent);border-radius:8px 8px 0 0;padding:4px 10px;font-size:.72rem}
+.lbox .tabbar svg{width:16px;height:16px}
+
+/* Effets */
+.group{margin:22px 0 4px}
+.group>h3{font-size:1.35rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.group>h3::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--main)}
+.fx .head{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.fx .num{font:800 .78rem var(--body);opacity:.7}
+.fx h4{font-size:1.25rem}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px}
+.badge{font:800 .72rem var(--body);padding:3px 9px;border-radius:999px;background:var(--soft);color:var(--text)}
+.badge.love{background:var(--main);color:var(--on-main)}
+.stage{position:relative;height:230px;border-radius:16px;background:var(--bg);border:1px solid var(--line);overflow:hidden;display:grid;place-items:center;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.stage canvas.cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage .over{position:relative;z-index:1;text-align:center;pointer-events:none}
+.stage .over h4{font-size:2.2rem}
+.stage .over p{margin:2px 0 0;font-weight:700;font-size:.85rem;opacity:.8}
+.stage .hint{position:absolute;right:10px;bottom:8px;font:800 .7rem var(--body);opacity:.65;z-index:1;pointer-events:none}
+.why{margin:10px 0 4px;font-size:.92rem}
+.dev{display:grid;gap:2px;font-size:.8rem;opacity:.8}
+.want{display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--bg);border:1px dashed var(--line);font-weight:800;cursor:pointer;min-height:44px}
+.want input{width:22px;height:22px;accent-color:var(--main);margin:0}
+.replay{position:absolute;left:10px;bottom:8px;z-index:2;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font:800 .75rem var(--body);cursor:pointer}
+
+/* 2 / 4 : roue qui penche + reflet */
+.tilt{width:170px;border-radius:50%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.3,.5,1);touch-action:pan-y;position:relative}
+.tilt .wheel{box-shadow:0 14px 30px rgba(0,0,0,.25)}
+.glare{position:absolute;inset:0;border-radius:50%;pointer-events:none;background:radial-gradient(circle at var(--gx,30%) var(--gy,25%),rgba(255,255,255,.85),rgba(255,255,255,0) 50%);opacity:.35;transition:opacity .3s;mix-blend-mode:overlay}
+.tilting .glare{opacity:1}
+/* 13 flèche qui fait « pop » */
+.arrow.pop{animation:pop .3s cubic-bezier(.3,1.8,.5,1)}
+@keyframes pop{50%{transform:translateX(-50%) scale(1.35) rotate(-8deg)}}
+.spinbox{width:160px}
+.spinbox svg.wheel{transition:none}
+/* 6 bouton aimanté (plus lent, comme demandé) */
+.mag-zone{padding:40px 50px;touch-action:pan-y}
+.mag{transition:transform .8s cubic-bezier(.25,1.3,.5,1),box-shadow .15s}
+/* 16 onde */
+.rip{position:relative;overflow:hidden}
+.rip span.w{position:absolute;border-radius:50%;background:currentColor;opacity:.4;transform:scale(0);animation:wave .6s ease-out forwards;pointer-events:none}
+@keyframes wave{to{transform:scale(4);opacity:0}}
+/* 3 carte en couches */
+.layers{width:min(78%,260px);height:180px;border-radius:20px;position:relative;overflow:hidden;transform-style:preserve-3d;transition:transform .6s ease;touch-action:pan-y;box-shadow:0 18px 36px rgba(0,0,0,.35)}
+.layers>div{position:absolute;inset:-14px;transition:transform .6s ease}
+.ly-bg{background:repeating-conic-gradient(from 0deg at 50% 60%,rgba(255,255,255,.14) 0 10deg,transparent 10deg 20deg),radial-gradient(circle at 50% 60%,var(--main),color-mix(in srgb,var(--main) 55%,#000) 80%)}
+.ly-mid span{position:absolute;font-size:22px;line-height:1}
+.ly-top{display:grid;place-items:center;align-content:center;color:var(--on-main);text-align:center}
+.ly-top small{font:800 1rem var(--body);opacity:.9}
+.ly-top b{font:400 2.6rem var(--display);text-shadow:0 3px 0 rgba(0,0,0,.2)}
+/* 26 lettres qui sautent */
+.jumpbox{text-align:center}
+.jumpbox small{display:block;font:800 1.05rem var(--body);opacity:.85}
+.jump{font:3.2rem var(--display);cursor:default}
+.jump span{display:inline-block}
+.jump span.j{animation:hop .5s cubic-bezier(.3,1.7,.5,1)}
+@keyframes hop{40%{transform:translateY(-16px) rotate(-6deg);color:var(--main)}}
+/* 64 particules : texte au-dessus */
+.parts-top{position:absolute;top:14px;left:0;right:0;text-align:center;font:800 1rem var(--body);z-index:1;pointer-events:none;opacity:.85}
+/* 9 apparition */
+.list{display:grid;gap:7px;width:min(86%,280px)}
+.list .it{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:7px 12px;font-weight:800;font-size:.95rem}
+.list .it i{width:14px;height:14px;border-radius:50%;flex:none}
+.list .it em{margin-left:auto;font-style:normal;opacity:.5}
+.play .it{animation:rise .5s cubic-bezier(.2,1.2,.4,1) backwards}
+.play .it:nth-child(2){animation-delay:.08s}.play .it:nth-child(3){animation-delay:.16s}.play .it:nth-child(4){animation-delay:.24s}.play .it:nth-child(5){animation-delay:.32s}.play .it:nth-child(6){animation-delay:.4s}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.96)}}
+
+/* Barre du bas : compteur des règles d'or */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom))}
+.bar .in{max-width:1120px;margin:0 auto;display:flex;gap:6px 10px;align-items:center;flex-wrap:wrap;font-size:.85rem;font-weight:800}
+.bar .pill{white-space:nowrap;padding:4px 10px;border-radius:999px;background:var(--soft)}
+.bar .pill.bad{background:var(--main);color:var(--on-main)}
+.bar .warn{flex-basis:100%;font-weight:700;font-size:.8rem;margin:0}
+.bar .warn:empty{display:none}
+.bar a{color:inherit;margin-left:auto}
+
+/* Récap + copier */
+.final{background:var(--card);border:2px solid var(--main);border-radius:20px;padding:16px}
+.final pre{white-space:pre-wrap;font:700 1rem/1.5 var(--body);background:var(--bg);border-radius:12px;padding:12px;margin:10px 0;border:1px solid var(--line)}
+.copy-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.done{display:inline-flex;align-items:center;gap:6px;font-weight:800;opacity:0;transition:opacity .2s}
+.done.on{opacity:1}
+.done svg{width:22px;height:22px}
+.done path{stroke-dasharray:30;stroke-dashoffset:30}
+.done.on path{animation:draw .4s .05s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+footer{padding:20px 0 10px;font-size:.8rem;opacity:.7}
+@media (max-width:480px){.bar .in{font-size:.75rem}.bar .pill{padding:3px 8px}.bar small{display:none}.bar a{display:none}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo-slot" data-logo></div>
+    <div class="grow">
+      <h1>Hazardo · choisis ton look</h1>
+      <p>Fête foraine, couleurs vives et joyeuses</p>
+    </div>
+    <span class="dn-lbl" id="dn-lbl">Jour</span>
+    <button class="dn" id="dn" type="button" aria-pressed="false" aria-label="Mode nuit"><i></i></button>
+  </header>
+
+  <div class="intro">
+    <b>Comment ça marche :</b>
+    <ol>
+      <li>Coche <b>une palette</b> : toute la page se repeint avec elle (essaie aussi l'interrupteur jour / nuit en haut).</li>
+      <li>Coche <b>un logo</b>.</li>
+      <li>Joue avec les effets (souris ou doigt) et coche « Je veux » sur ceux qui te plaisent. Le compteur en bas surveille les règles d'or.</li>
+      <li>En bas de la page : « Copier mon choix », puis colle le message dans Claude.</li>
+    </ol>
+  </div>
+
+  <!-- 1. COULEURS -->
+  <section id="couleurs">
+    <h2>1. Couleurs <small>coche UNE palette</small></h2>
+    <p class="lead">Chaque palette a 5 couleurs, une version jour et une version nuit, et 6 couleurs de parts pour la roue (texte des parts vérifié : bien lisible).</p>
+    <div class="grid" id="pal-grid"></div>
+  </section>
+
+  <!-- 2. LOGO -->
+  <section id="logo">
+    <h2>2. Logo <small>coche UN logo</small></h2>
+    <p class="lead">Dessinés en SVG : un dessin fait de formes, net à toutes les tailles (comme un tampon qu'on peut agrandir sans flou). Ils prennent les couleurs de la palette cochée.</p>
+    <div class="grid" id="logo-grid"></div>
+  </section>
+
+  <!-- 3. EFFETS -->
+  <section id="effets">
+    <h2>3. Effets <small>coche « Je veux » sur ceux qui te plaisent</small></h2>
+    <p class="lead">Seulement tes effets « J'aime », choisis pour une app <b>ludique</b> : rapides et rebondis. Ceux que tu « adores » sont en premier dans leur groupe. Ils sont déjà aux couleurs de la palette cochée.</p>
+    <div id="fx-groups"></div>
+  </section>
+
+  <!-- RÉCAP -->
+  <section id="recap">
+    <h2>Mon choix</h2>
+    <div class="final">
+      <p style="margin:0">Voici le message qui sera copié :</p>
+      <pre id="msg" aria-live="polite"></pre>
+      <div class="copy-row">
+        <button class="btn-main rip" id="copy" type="button">Copier mon choix</button>
+        <span class="done" id="done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>Copié ! Colle-le dans Claude.</span>
+      </div>
+    </div>
+  </section>
+  <footer>Page de choix pour Hazardo — rien n'est envoyé nulle part, tes coches restent dans ce navigateur.</footer>
+</div>
+
+<div class="bar" role="status">
+  <div class="in">
+    <span class="pill" id="c-star" title="1 effet star maximum par page">⭐ Star : 0/1</span>
+    <span class="pill" id="c-deco" title="3 types d'effets décoratifs maximum">🎨 Décoratifs : 0/3</span>
+    <span class="pill" id="c-react" title="Les petites réactions au toucher ne comptent pas">👆 Réactions : 0 <small>(hors compte)</small></span>
+    <a href="#recap">Mon choix ↓</a>
+    <p class="warn" id="c-warn"></p>
+  </div>
+</div>
+
+<script>
+(function(){
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const $ = id => document.getElementById(id);
+
+/* ---------- Les 3 palettes ---------- */
+const PALS = [
+  {id:1, name:'Grande Roue', tag:"Le rouge et l'or des manèges d'antan, avec le bleu d'un ciel de fête.",
+   day:{bg:'#FFF6E6',text:'#2A1838',main:'#D7263D',accent:'#FFB400',soft:'#FFE3CC'},
+   night:{bg:'#1A0F2E',text:'#FFF2DF',main:'#FF4D61',accent:'#FFC233',soft:'#33204F'},
+   parts:['#D7263D','#FFB400','#1F6FD1','#FF8A00','#7B3FC4','#3CC47C']},
+  {id:2, name:'Barbe à papa', tag:"Rose bonbon, menthe glacée et lilas sucré, comme au stand de friandises.",
+   day:{bg:'#FFF0F7',text:'#3A1A4A',main:'#D0196A',accent:'#0FA89B',soft:'#FFD3E6'},
+   night:{bg:'#22112D',text:'#FFEAF4',main:'#FF6FAE',accent:'#36DCCB',soft:'#41224F'},
+   parts:['#D0196A','#2EC4B6','#8447D9','#FFC93C','#2B66D9','#FF9A6B']},
+  {id:3, name:'Lampions du soir', tag:"L'orange des lampions et le bleu lagon des guirlandes qui s'allument à la tombée de la nuit.",
+   day:{bg:'#FFF8EB',text:'#14292D',main:'#C8401A',accent:'#0B8A94',soft:'#FCE1C2'},
+   night:{bg:'#0E2226',text:'#FCF2E2',main:'#FF7448',accent:'#33C3C9',soft:'#1C3C41'},
+   parts:['#C8401A','#F2B705','#0A7A83','#FF8FB8','#6A4BC4','#7DD181']},
+];
+const LABELS = {bg:'Fond',text:'Texte',main:'Principale',accent:'Accent',soft:'Douce'};
+const CHOIX = ['Pizza','Sushi','Burger','Pâtes','Salade','Tacos'];
+
+/* Contraste (règle des lecteurs d'écran : 4,5 minimum pour un texte normal) */
+function lum(h){ return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4).reduce((s,v,i)=>s+v*[.2126,.7152,.0722][i],0); }
+function ratio(a,b){ const x=lum(a), y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); }
+const best = (bg, dark) => ratio('#FFFFFF',bg) >= ratio(dark,bg) ? '#FFFFFF' : dark;
+const fmt = r => r.toFixed(1).replace('.',',');
+
+function colors(pal, mode){
+  const m = pal[mode], dark = pal.day.text;
+  return {...m, onMain: best(m.main, dark), parts: pal.parts, partText: pal.parts.map(c=>best(c, dark))};
+}
+function applyVars(el, pal, mode){
+  const c = colors(pal, mode), s = el.style;
+  s.setProperty('--bg',c.bg); s.setProperty('--text',c.text); s.setProperty('--main',c.main);
+  s.setProperty('--accent',c.accent); s.setProperty('--soft',c.soft); s.setProperty('--on-main',c.onMain);
+  c.parts.forEach((p,i)=>{ s.setProperty('--w'+(i+1),p); s.setProperty('--wt'+(i+1),c.partText[i]); });
+}
+
+/* ---------- Dessins réutilisés : roue, flèche, logos ---------- */
+function wheelSVG(){
+  const R=100, n=6; let g='';
+  for(let i=0;i<n;i++){
+    const a0=(i/n)*2*Math.PI-Math.PI/2-Math.PI/n, a1=a0+2*Math.PI/n;
+    const x0=R+R*Math.cos(a0), y0=R+R*Math.sin(a0), x1=R+R*Math.cos(a1), y1=R+R*Math.sin(a1);
+    const mid=(i/n)*360; // milieu de la part, en degrés depuis le haut
+    g+=`<path d="M${R} ${R}L${x0.toFixed(2)} ${y0.toFixed(2)}A${R} ${R} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}Z" style="fill:var(--w${i+1})"/>`;
+    g+=`<text transform="rotate(${mid} ${R} ${R}) translate(${R} 40) rotate(90)" text-anchor="middle" dominant-baseline="middle" style="fill:var(--wt${i+1})" font-size="16">${CHOIX[i]}</text>`;
+  }
+  return `<svg class="wheel" viewBox="0 0 200 200" aria-hidden="true">${g}<circle cx="100" cy="100" r="97" fill="none" style="stroke:var(--text)" stroke-width="5"/><circle cx="100" cy="100" r="13" style="fill:var(--bg);stroke:var(--text)" stroke-width="4"/></svg>`;
+}
+const ARROW = `<svg class="arrow" viewBox="0 0 40 46" aria-hidden="true"><path d="M4 4h32L20 42z" style="fill:var(--accent);stroke:var(--text)" stroke-width="4" stroke-linejoin="round"/></svg>`;
+const wheelWithArrow = () => `<div class="wheelbox">${ARROW}${wheelSVG()}</div>`;
+
+function logoWheel(){
+  const c=32, R=26; let g='';
+  for(let i=0;i<6;i++){ const a0=i/6*2*Math.PI-Math.PI/2-Math.PI/6, a1=a0+Math.PI/3;
+    g+=`<path d="M${c} ${c+2}L${(c+R*Math.cos(a0)).toFixed(2)} ${(c+2+R*Math.sin(a0)).toFixed(2)}A${R} ${R} 0 0 1 ${(c+R*Math.cos(a1)).toFixed(2)} ${(c+2+R*Math.sin(a1)).toFixed(2)}Z" style="fill:var(--w${i+1})"/>`; }
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">${g}<circle cx="32" cy="34" r="27" fill="none" style="stroke:var(--text)" stroke-width="4"/><circle cx="32" cy="34" r="6" style="fill:#FFF8EE;stroke:var(--text)" stroke-width="3"/><path d="M24 2h16l-8 12z" style="fill:var(--accent);stroke:var(--text)" stroke-width="3" stroke-linejoin="round"/></svg>`;
+}
+function logoTicket(){
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-8 32 32)"><path d="M9 13H55a4 4 0 0 1 4 4V27a5 5 0 0 0 0 10V47a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V37a5 5 0 0 0 0-10V17a4 4 0 0 1 4-4Z" style="fill:var(--main);stroke:var(--text)" stroke-width="3"/><path d="M20 20h7v9h10v-9h7v24h-7v-9H27v9h-7z" style="fill:var(--on-main)"/></g><path d="M53 2l2.2 5.3L61 9l-5.8 1.7L53 16l-2.2-5.3L45 9l5.8-1.7z" style="fill:var(--accent);stroke:var(--text)" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+}
+function logoTent(){
+  const xs=[6,14.67,23.33,32,40.67,49.33,58]; let roof='';
+  for(let i=0;i<6;i++) roof+=`<path d="M32 13L${xs[i]} 31H${xs[i+1]}Z" style="fill:${i%2?'#FFF8EE':'var(--main)'}"/>`;
+  let body=''; for(let i=0;i<4;i++) body+=`<rect x="${10+i*11}" y="31" width="11" height="23" style="fill:${i%2?'#FFF8EE':'var(--main)'}"/>`;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 13V3" style="stroke:var(--text)" stroke-width="3" stroke-linecap="round"/><path d="M33 3l11 4-11 4z" style="fill:var(--accent);stroke:var(--text)" stroke-width="2" stroke-linejoin="round"/>${body}<path d="M26 54V45a6 6 0 0 1 12 0v9z" style="fill:var(--text)"/><rect x="10" y="31" width="44" height="23" fill="none" style="stroke:var(--text)" stroke-width="3"/>${roof}<path d="M32 13L6 31H58Z" fill="none" style="stroke:var(--text)" stroke-width="3" stroke-linejoin="round"/></svg>`;
+}
+const LOGOS = [
+  {id:1, name:'La mini-roue', tag:'Une petite roue de 6 parts avec sa flèche : on comprend tout de suite à quoi sert l\'app.', svg:logoWheel},
+  {id:2, name:'Le ticket', tag:'Un ticket de manège avec un grand H, posé de travers comme dans une poche de fête.', svg:logoTicket},
+  {id:3, name:'Le chapiteau', tag:'Le chapiteau rayé et son fanion : l\'entrée de la fête foraine.', svg:logoTent},
+];
+
+/* ---------- Ce que j'ai coché (gardé dans ce navigateur) ---------- */
+const sel = {pal:1, logo:1, fx:[], night: matchMedia('(prefers-color-scheme: dark)').matches};
+try{ Object.assign(sel, JSON.parse(localStorage.getItem('hazardo-choix')||'{}')); }catch(e){}
+function save(){ try{ localStorage.setItem('hazardo-choix', JSON.stringify(sel)); }catch(e){} }
+const curPal = () => PALS[sel.pal-1];
+const mode = () => sel.night ? 'night' : 'day';
+const C = () => colors(curPal(), mode());   // couleurs actuelles, lues par les dessins animés
+
+/* ---------- Construire la partie COULEURS ---------- */
+const palGrid = $('pal-grid');
+PALS.forEach(p=>{
+  const card = document.createElement('article'); card.className='card'; card.dataset.pal=p.id;
+  const modeBox = m => {
+    const c = colors(p,m), k = m==='day' ? 'Jour' : 'Nuit';
+    const sw = Object.keys(LABELS).map(key=>`<div class="sw"><span class="c" style="background:${c[key]}"></span><div><b>${LABELS[key]}</b><code>${c[key]}</code></div></div>`).join('');
+    const minPart = Math.min(...p.parts.map((x,i)=>ratio(x,c.partText[i])));
+    return `<div class="mode" data-fixed="${p.id}" data-mode="${m}"><h4>${m==='day'?'☀️':'🌙'} ${k}</h4>${sw}
+      <div class="checks"><span class="ok">Texte sur fond : ${fmt(ratio(c.text,c.bg))}</span><span class="ok">« Tourne ! » : ${fmt(ratio(c.onMain,c.main))}</span><span class="ok">Noms sur la roue : ${fmt(minPart)} min.</span></div></div>`;
+  };
+  const screen = m => `<div class="home" data-fixed="${p.id}" data-mode="${m}"><div class="hd"><span class="logo-slot" data-logo></span>Hazardo</div><span class="rn">Repas ▾</span>${wheelWithArrow()}<button class="btn-main" type="button" tabindex="-1">Tourne !</button><span class="sec">Modifier les choix</span></div>`;
+  card.innerHTML = `<label class="pick"><input type="radio" name="pal" value="${p.id}"> Je choisis cette palette</label>
+    <h3>${p.id}. ${p.name}</h3><p class="tag">${p.tag}</p>
+    <div class="modes">${modeBox('day')}${modeBox('night')}</div>
+    <div class="screens">${screen('day')}${screen('night')}</div>`;
+  palGrid.appendChild(card);
+});
+document.querySelectorAll('[data-fixed]').forEach(el=>applyVars(el, PALS[el.dataset.fixed-1], el.dataset.mode));
+const sumTxt = 'Contraste : 4,5 minimum pour bien lire (comme une étiquette lisible de loin). Toutes les valeurs ci-dessus le dépassent.';
+palGrid.insertAdjacentHTML('afterend', `<p class="lead" style="font-size:.85rem">${sumTxt} La couleur d'accent sert à décorer (flèche, étoiles), jamais pour écrire sur le fond.</p>`);
+
+/* ---------- Construire la partie LOGO ---------- */
+const logoGrid = $('logo-grid');
+LOGOS.forEach(l=>{
+  const card = document.createElement('article'); card.className='card'; card.dataset.logoCard=l.id;
+  const box = m => `<div class="lbox" data-scope="${m}"><div class="big">${l.svg()}</div>
+      <div class="row"><span class="s32">${l.svg()}</span>32 px<span class="icon">${l.svg()}</span></div>
+      <div class="tabbar">${l.svg()} Hazardo</div></div>`;
+  card.innerHTML = `<label class="pick"><input type="radio" name="logo" value="${l.id}"> Je choisis ce logo</label>
+    <h3>${l.id}. ${l.name}</h3><p class="tag">${l.tag}</p>
+    <div class="logo-big">${box('day')}${box('night')}</div>
+    <p class="tag" style="margin:8px 0 0;font-size:.8rem">En grand · en tout petit (32 px) · en icône d'iPhone · dans l'onglet du navigateur. À gauche le jour, à droite la nuit.</p>`;
+  logoGrid.appendChild(card);
+});
+
+/* ---------- Les effets proposés ---------- */
+const GROUPS = [
+  {key:'fond', title:"Fond de l'accueil", phrase:"sur le fond de l'accueil"},
+  {key:'roue', title:'La roue', phrase:'sur la roue'},
+  {key:'fleche', title:'La flèche', phrase:'sur la flèche'},
+  {key:'bouton', title:'Bouton Tourne !', phrase:'sur le bouton Tourne !'},
+  {key:'annonce', title:'Annonce du gagnant', phrase:"sur l'annonce du gagnant"},
+  {key:'liste', title:'Liste des choix', phrase:'sur la liste des choix'},
+];
+// kind : star = l'effet vedette (1 par page) · deco = effet décoratif (3 types max) · reaction = réponse à un appui (ne compte pas)
+const FX = [
+  {n:81, g:'fond', name:'Toile élastique', love:true, kind:'star',
+   stage:`<canvas class="cv" id="fx81"></canvas><div class="over"><h4>Hazardo</h4><p>Glisse dessus</p></div>`,
+   why:"Tu adores sa vraie physique : le fond se tend comme la toile d'un trampoline de fête foraine quand ton doigt passe.",
+   pc:'la grille se déforme sous la souris, comme un tissu', ip:'elle se déforme sous le doigt'},
+  {n:94, g:'fond', name:'Voyage dans les étoiles', love:true, kind:'star',
+   stage:`<canvas class="cv" id="fx94"></canvas><div class="over" style="color:#fff"><h4>Hazardo</h4><p>Appuie pour accélérer</p></div>`,
+   why:"Des étoiles aux couleurs de la roue foncent vers toi, comme un manège qui décolle. Il brille surtout en mode nuit.",
+   pc:'les étoiles foncent vers toi ; la souris dirige', ip:'le doigt dirige, appuie pour accélérer'},
+  {n:39, g:'fond', name:'Points qui fuient', kind:'deco',
+   stage:`<canvas class="cv" id="fx39"></canvas><div class="over"><h4>Hazardo</h4><p>Promène ton doigt</p></div>`,
+   why:"Les points colorés ressemblent aux ampoules d'une guirlande de fête, et ils s'écartent de ton doigt : discret mais joueur.",
+   pc:'les points s\'écartent de la souris', ip:'ils s\'écartent du doigt'},
+  {n:2, g:'roue', name:'Carte qui penche en 3D (ici : la roue)', kind:'deco',
+   stage:`<div class="tilt js-tilt" data-max="16">${wheelSVG()}</div><span class="hint">Bouge dessus</span>`,
+   why:"La roue penche vers toi comme une vraie roue de stand qu'on a envie d'attraper : elle donne du relief au cœur de l'app.",
+   pc:'la roue penche vers la souris', ip:'glisse le doigt de gauche à droite sur la roue'},
+  {n:4, g:'roue', name:'Reflet brillant', kind:'deco',
+   stage:`<div class="tilt js-tilt" data-max="8" data-glare="1">${wheelSVG()}<span class="glare"></span></div><span class="hint">Bouge dessus</span>`,
+   why:"Un reflet glisse sur la roue comme sur une roue peinte et vernie de manège : elle a l'air neuve et brillante.",
+   pc:'le reflet suit la souris', ip:'le reflet suit le doigt qui glisse'},
+  {n:13, g:'fleche', name:'Petit « pop »', kind:'reaction',
+   stage:`<div class="wheelbox spinbox" id="spin13">${ARROW}${wheelSVG()}</div><button class="replay" type="button" id="spin13-btn">Petit tour</button>`,
+   why:"La flèche saute à chaque part qui passe, comme le « clic-clic » de la languette d'une vraie roue de loterie.",
+   pc:'clique « Petit tour » ou la flèche', ip:'touche « Petit tour » ou la flèche'},
+  {n:6, g:'bouton', name:'Bouton aimanté (ralenti)', love:true, kind:'deco',
+   stage:`<div class="mag-zone" id="magzone"><button class="btn-main mag" id="mag" type="button">Tourne !</button></div>`,
+   why:"Tu l'adores, en un peu plus lent : le bouton « Tourne ! » se laisse attirer par la souris, comme s'il avait hâte qu'on appuie.",
+   pc:'le bouton suit doucement la souris', ip:'il s\'enfonce à l\'appui puis rebondit'},
+  {n:16, g:'bouton', name:'Onde au toucher', kind:'reaction',
+   stage:`<button class="btn-main rip" id="rip" type="button">Tourne !</button>`,
+   why:"Une onde part de l'endroit exact où tu touches « Tourne ! » : on sent que l'appui a bien été pris.",
+   pc:'une onde part de l\'endroit cliqué', ip:'une onde part de l\'endroit touché'},
+  {n:64, g:'annonce', name:'Forme en particules', love:true, kind:'star',
+   stage:`<div class="parts-top">Et c'est…</div><canvas class="cv" id="fx64"></canvas><span class="hint">Touche pour éparpiller</span>`,
+   why:"Tu l'adores : le nom du gagnant est fait de confettis de couleur qui s'éparpillent et se reforment. Une vraie petite fête.",
+   pc:'la souris éparpille les points, ils se reforment', ip:'touche pour tout éparpiller'},
+  {n:3, g:'annonce', name:'Carte en couches', kind:'star',
+   stage:`<div class="layers js-tilt" data-max="10"><div class="ly-bg" data-depth="0.4"></div><div class="ly-mid" data-depth="1">
+      <span style="left:14%;top:18%;color:var(--accent)">★</span><span style="left:78%;top:22%;color:#fff">✦</span><span style="left:20%;top:72%;color:#fff">✦</span><span style="left:74%;top:70%;color:var(--accent)">★</span><span style="left:48%;top:12%;color:var(--accent);font-size:14px">●</span></div>
+      <div class="ly-top" data-depth="1.8"><small>Et c'est…</small><b>Pizza !</b></div></div><span class="hint">Bouge dessus</span>`,
+   why:"L'annonce devient une carte en relief avec des rayons de soleil de fête : le moment du gagnant est le plus important, il mérite la star.",
+   pc:'les couches bougent avec la souris', ip:'glisse le doigt de gauche à droite'},
+  {n:26, g:'annonce', name:'Lettres qui sautent', kind:'deco',
+   stage:`<div class="jumpbox"><small>Et c'est…</small><div class="jump" id="jump">Pizza !</div></div><button class="replay" type="button" id="jump-btn">Rejouer</button>`,
+   why:"Les lettres du gagnant sautent de joie l'une après l'autre : simple, gai, et ça marche même en tout petit.",
+   pc:'passe la souris sur les lettres', ip:'fais glisser le doigt sur le mot'},
+  {n:9, g:'liste', name:'Apparition au défilement', kind:'deco',
+   stage:`<div class="list js-play" id="list9">${CHOIX.map((c,i)=>`<div class="it"><i style="background:var(--w${i+1})"></i>${c}<em>✕</em></div>`).join('')}</div><button class="replay" type="button" id="list9-btn">Rejouer</button>`,
+   why:"Les choix arrivent un par un avec un petit rebond, comme les lots qu'on aligne sur l'étagère du stand.",
+   pc:'les choix arrivent un par un', ip:'pareil, quand la liste arrive à l\'écran'},
+];
+const fxBox = $('fx-groups');
+GROUPS.forEach(g=>{
+  const list = FX.filter(f=>f.g===g.key).sort((a,b)=>(b.love?1:0)-(a.love?1:0));
+  const wrap = document.createElement('div'); wrap.className='group';
+  wrap.innerHTML = `<h3>${g.title}</h3><div class="grid"></div>`;
+  const grid = wrap.querySelector('.grid');
+  list.forEach(f=>{
+    const kind = {star:'⭐ Effet star', deco:'🎨 Décoratif', reaction:'👆 Réaction au toucher'}[f.kind];
+    const card = document.createElement('article'); card.className='card fx'; card.dataset.fx=f.n;
+    card.innerHTML = `<div class="head"><span class="num">Effet ${f.n}</span><h4>${f.name}</h4></div>
+      <div class="badges">${f.love?'<span class="badge love">❤ J\'adore</span>':''}<span class="badge">${kind}</span></div>
+      <div class="stage">${f.stage}</div>
+      <p class="why">${f.why}</p>
+      <div class="dev"><span><b>PC :</b> ${f.pc}</span><span><b>iPhone :</b> ${f.ip}</span></div>
+      <label class="want"><input type="checkbox" value="${f.n}"> Je veux</label>`;
+    grid.appendChild(card);
+  });
+  fxBox.appendChild(wrap);
+});
+
+/* ---------- Mettre à jour la page ---------- */
+function paint(){
+  applyVars(document.documentElement, curPal(), mode());
+  document.querySelectorAll('[data-scope]').forEach(el=>applyVars(el, curPal(), el.dataset.scope));
+  document.querySelectorAll('[data-logo]').forEach(el=>{ el.innerHTML = LOGOS[sel.logo-1].svg(); });
+  document.querySelectorAll('.card[data-pal]').forEach(c=>c.classList.toggle('chosen', +c.dataset.pal===sel.pal));
+  document.querySelectorAll('.card[data-logo-card]').forEach(c=>c.classList.toggle('chosen', +c.dataset.logoCard===sel.logo));
+  document.querySelectorAll('.card[data-fx]').forEach(c=>c.classList.toggle('chosen', sel.fx.includes(+c.dataset.fx)));
+  document.querySelectorAll('input[name=pal]').forEach(i=>i.checked = +i.value===sel.pal);
+  document.querySelectorAll('input[name=logo]').forEach(i=>i.checked = +i.value===sel.logo);
+  document.querySelectorAll('.want input').forEach(i=>i.checked = sel.fx.includes(+i.value));
+  $('dn').setAttribute('aria-pressed', String(sel.night)); $('dn-lbl').textContent = sel.night ? 'Nuit' : 'Jour';
+  count(); message(); save();
+}
+function count(){
+  const chosen = FX.filter(f=>sel.fx.includes(f.n));
+  const stars = chosen.filter(f=>f.kind==='star').length;
+  const deco = chosen.filter(f=>f.kind!=='reaction').length;
+  const react = chosen.filter(f=>f.kind==='reaction').length;
+  const fonds = chosen.filter(f=>f.g==='fond').length;
+  $('c-star').textContent = `⭐ Star : ${stars}/1`; $('c-star').classList.toggle('bad', stars>1);
+  $('c-deco').textContent = `🎨 Décoratifs : ${deco}/3`; $('c-deco').classList.toggle('bad', deco>3);
+  $('c-react').innerHTML = `👆 Réactions : ${react} <small>(hors compte)</small>`;
+  const w = [];
+  if (stars>1) w.push('Trop d\'effets star : garde-en un seul, sinon ils se volent la vedette.');
+  if (deco>3) w.push('Plus de 3 types d\'effets décoratifs : la page va devenir chargée. Retire-en un.');
+  if (fonds>1) w.push('Un seul fond possible pour l\'accueil : choisis-en un.');
+  $('c-warn').textContent = w.join(' ');
+}
+function message(){
+  const p = curPal();
+  const order = GROUPS.map(g=>g.key);
+  const chosen = FX.filter(f=>sel.fx.includes(f.n)).sort((a,b)=>order.indexOf(a.g)-order.indexOf(b.g));
+  const fx = chosen.length ? chosen.map(f=>`${f.n} ${GROUPS.find(g=>g.key===f.g).phrase}`).join(', ') : 'aucun';
+  $('msg').textContent = `Mon look : palette ${p.id} (${p.name}), logo ${sel.logo} (${LOGOS[sel.logo-1].name}), effets : ${fx}.`;
+}
+document.addEventListener('change', e=>{
+  const t = e.target;
+  if (t.name==='pal') sel.pal = +t.value;
+  else if (t.name==='logo') sel.logo = +t.value;
+  else if (t.closest('.want')) sel.fx = t.checked ? [...new Set([...sel.fx, +t.value])] : sel.fx.filter(n=>n!==+t.value);
+  else return;
+  paint();
+});
+$('dn').addEventListener('click', ()=>{ sel.night = !sel.night; paint(); });
+
+/* Copier mon choix */
+$('copy').addEventListener('click', async ()=>{
+  const txt = $('msg').textContent; let ok = false;
+  try{ await navigator.clipboard.writeText(txt); ok = true; }catch(e){
+    const ta = document.createElement('textarea'); ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select();
+    try{ ok = document.execCommand('copy'); }catch(e2){} ta.remove();
+  }
+  const d = $('done'); d.lastChild.textContent = ok ? 'Copié ! Colle-le dans Claude.' : 'Sélectionne le texte au-dessus et copie-le.';
+  d.classList.remove('on'); d.offsetWidth; d.classList.add('on');
+});
+
+/* ---------- Petits outils pour les démos (repris de la Salle des effets) ---------- */
+function liveCanvas(stage, cv, setup, frame){ const ctx=cv.getContext('2d'); let W=0,H=0,vis=false,raf=0;
+  function size(){ const d=Math.min(devicePixelRatio||1,2); W=cv.clientWidth; H=cv.clientHeight; if(!W||!H) return; cv.width=W*d; cv.height=H*d; ctx.setTransform(d,0,0,d,0,0); setup(W,H); }
+  function loop(t){ if(W&&H) frame(ctx,W,H,t||0); if(vis&&!reduce) raf=requestAnimationFrame(loop); }
+  size(); new ResizeObserver(size).observe(stage); loop(0);
+  new IntersectionObserver(es=>{ vis=es[0].isIntersecting; cancelAnimationFrame(raf); if(vis&&!reduce) raf=requestAnimationFrame(loop); else loop(0); }).observe(stage);
+  return size; }
+function pointerIn(stage){ const p={x:-999,y:-999,on:false}; stage.addEventListener('pointermove',e=>{ const r=stage.getBoundingClientRect(); p.x=e.clientX-r.left; p.y=e.clientY-r.top; p.on=true; });
+  stage.addEventListener('pointerleave',()=>{ p.on=false; p.x=p.y=-999; }); stage.addEventListener('pointercancel',()=>{ p.on=false; p.x=p.y=-999; }); return p; }
+const stageOf = id => $(id).closest('.stage');
+function restart(el, cls){ el.classList.remove(cls); el.offsetWidth; el.classList.add(cls); }
+
+// Roue qui penche / reflet / couches : souris, ou doigt qui glisse à l'horizontale (glisser en vertical fait défiler la page)
+document.querySelectorAll('.js-tilt').forEach(el=>{
+  const max=+el.dataset.max||12, layers=[...el.querySelectorAll('[data-depth]')], glare=el.dataset.glare;
+  function move(e){ if (reduce) return;
+    const r=el.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+    el.style.transition='transform .08s linear';
+    el.style.transform=`perspective(700px) rotateX(${(-y*max).toFixed(2)}deg) rotateY(${(x*max).toFixed(2)}deg)`;
+    layers.forEach(l=>{ const d=+l.dataset.depth; l.style.transition='transform .08s linear'; l.style.transform=`translate3d(${(x*d*14).toFixed(1)}px,${(y*d*14).toFixed(1)}px,0)`; });
+    if (glare){ el.classList.add('tilting'); el.style.setProperty('--gx',((x+.5)*100)+'%'); el.style.setProperty('--gy',((y+.5)*100)+'%'); } }
+  function reset(){ el.style.transition=''; el.style.transform=''; el.classList.remove('tilting'); layers.forEach(l=>{ l.style.transition=''; l.style.transform=''; }); }
+  el.addEventListener('pointermove',move); el.addEventListener('pointerleave',reset); el.addEventListener('pointercancel',reset);
+  el.addEventListener('pointerup',e=>{ if(e.pointerType!=='mouse') reset(); });
+});
+
+// 81 Toile élastique
+(function(){ const st=stageOf('fx81'), p=pointerIn(st); let G=[], cols=0, rows=0;
+  liveCanvas(st,$('fx81'),(W,H)=>{ cols=Math.max(10,Math.round(W/22)); rows=Math.max(8,Math.round(H/22)); G=[]; for(let j=0;j<rows;j++) for(let i=0;i<cols;i++){ const x=i/(cols-1)*W, y=j/(rows-1)*H; G.push({ox:x,oy:y,x,y,vx:0,vy:0}); } },
+    (ctx,W,H)=>{ const c=C(); ctx.clearRect(0,0,W,H);
+      for(const q of G){ const dx=q.x-p.x, dy=q.y-p.y, d=Math.hypot(dx,dy); if(d<80&&d>0){ const f=(80-d)/80; q.vx+=dx/d*f*3; q.vy+=dy/d*f*3; }
+        q.vx+=(q.ox-q.x)*.08; q.vy+=(q.oy-q.y)*.08; q.vx*=.82; q.vy*=.82; q.x+=q.vx; q.y+=q.vy; }
+      ctx.strokeStyle=c.text; ctx.globalAlpha=.22; ctx.lineWidth=1;
+      for(let j=0;j<rows;j++){ ctx.beginPath(); for(let i=0;i<cols;i++){ const q=G[j*cols+i]; i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y); } ctx.stroke(); }
+      for(let i=0;i<cols;i++){ ctx.beginPath(); for(let j=0;j<rows;j++){ const q=G[j*cols+i]; j?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y); } ctx.stroke(); }
+      ctx.globalAlpha=1; G.forEach((q,k)=>{ const m=Math.hypot(q.x-q.ox,q.y-q.oy); if(m>2){ ctx.fillStyle=c.parts[k%6]; ctx.beginPath(); ctx.arc(q.x,q.y,Math.min(5,1.5+m/5),0,7); ctx.fill(); } }); }); })();
+
+// 94 Voyage dans les étoiles (étoiles aux couleurs des parts)
+(function(){ const st=stageOf('fx94'), p=pointerIn(st); let S=[], fast=false, cx=0, cy=0;
+  st.addEventListener('pointerdown',()=>{ fast=true; }); ['pointerup','pointerleave','pointercancel'].forEach(t=>st.addEventListener(t,()=>{ fast=false; }));
+  liveCanvas(st,$('fx94'),(W,H)=>{ S=Array.from({length:220},(_,i)=>({x:(Math.random()-.5)*W*2,y:(Math.random()-.5)*H*2,z:Math.random()*W,k:i%7})); cx=W/2; cy=H/2;
+      const ctx=$('fx94').getContext('2d'); ctx.fillStyle=curPal().night.bg; ctx.fillRect(0,0,W,H); },
+    (ctx,W,H)=>{ const c=C(), bg=curPal().night.bg; ctx.globalAlpha=.35; ctx.fillStyle=bg; ctx.fillRect(0,0,W,H); ctx.globalAlpha=1;
+      const tx=p.on?p.x:W/2, ty=p.on?p.y:H/2; cx+=(tx-cx)*.05; cy+=(ty-cy)*.05; const sp=fast?14:4;
+      for(const s of S){ const pz=s.z; s.z-=sp; if(s.z<1){ s.x=(Math.random()-.5)*W*2; s.y=(Math.random()-.5)*H*2; s.z=W; continue; }
+        const k=W*.5/s.z, x=cx+s.x*k, y=cy+s.y*k, k0=W*.5/pz, x0=cx+s.x*k0, y0=cy+s.y*k0;
+        ctx.strokeStyle= s.k<6 ? c.parts[s.k] : '#ffffff'; ctx.globalAlpha=Math.min(1,1.2-s.z/W); ctx.lineWidth=Math.max(.8,2.6-s.z/W*2.4);
+        ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x,y); ctx.stroke(); } ctx.globalAlpha=1; }); })();
+
+// 39 Points qui fuient (ampoules de guirlande)
+(function(){ const st=stageOf('fx39'), p=pointerIn(st); let pts=[];
+  liveCanvas(st,$('fx39'),(W,H)=>{ pts=[]; let j=0; for(let y=12;y<H;y+=18,j++){ let i=0; for(let x=12;x<W;x+=18,i++) pts.push({ox:x,oy:y,x,y,k:(i+j)%6}); } },
+    (ctx,W,H)=>{ const c=C(); ctx.clearRect(0,0,W,H);
+      for(const q of pts){ const dx=q.ox-p.x, dy=q.oy-p.y, d=Math.hypot(dx,dy), f=d<70?(70-d)/70:0;
+        const tx=q.ox+(d?dx/d:0)*f*26, ty=q.oy+(d?dy/d:0)*f*26; q.x+=(tx-q.x)*.18; q.y+=(ty-q.y)*.18;
+        ctx.fillStyle=c.parts[q.k]; ctx.globalAlpha=f>0?1:.55; ctx.beginPath(); ctx.arc(q.x,q.y,2+f*2.2,0,7); ctx.fill(); }
+      ctx.globalAlpha=1; }); })();
+
+// 13 Flèche qui fait « pop » à chaque part
+(function(){ const box=$('spin13'), arrow=box.querySelector('.arrow'), wheel=box.querySelector('.wheel'); let ang=0, raf=0;
+  const pop=()=>{ if(!reduce) restart(arrow,'pop'); };
+  function spin(){ cancelAnimationFrame(raf); if(reduce){ pop(); return; }
+    const a0=ang, total=360*1.5+Math.random()*120, t0=performance.now(), dur=2200; let last=Math.floor(a0/60);
+    (function step(now){ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3); ang=a0+total*e; wheel.style.transform=`rotate(${ang}deg)`;
+      const seg=Math.floor((ang+30)/60); if(seg!==last){ last=seg; pop(); } if(k<1) raf=requestAnimationFrame(step); })(t0); }
+  $('spin13-btn').addEventListener('click',spin); arrow.style.pointerEvents='auto'; arrow.style.cursor='pointer'; arrow.addEventListener('click',pop); wheel.addEventListener('click',spin); })();
+
+// 6 Bouton aimanté (souris seulement, un peu plus lent que dans la Salle)
+(function(){ const mag=$('mag'), zone=$('magzone');
+  if (fine && !reduce){
+    zone.addEventListener('pointermove',e=>{ const r=mag.getBoundingClientRect(); const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2); mag.style.transform=`translate(${(dx*.14).toFixed(1)}px,${(dy*.2).toFixed(1)}px)`; });
+    zone.addEventListener('pointerleave',()=>{ mag.style.transform=''; });
+  } })();
+
+// 16 Onde au toucher (sert aussi au bouton « Copier mon choix »)
+document.querySelectorAll('.rip').forEach(b=>b.addEventListener('pointerdown',e=>{ if(reduce) return; const r=b.getBoundingClientRect(), s=Math.max(r.width,r.height); const w=document.createElement('span'); w.className='w';
+  w.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`; b.appendChild(w); setTimeout(()=>w.remove(),650); }));
+
+// 64 Le nom du gagnant en particules (confettis)
+(function(){ const st=stageOf('fx64'), p=pointerIn(st); let P=[];
+  const resize = liveCanvas(st,$('fx64'),(W,H)=>{ const o=document.createElement('canvas'); o.width=W; o.height=H; const x=o.getContext('2d');
+      const fs=Math.min(H*.42, W/4.2); x.fillStyle='#000'; x.font=`${Math.round(fs)}px "Lilita One","Arial Rounded MT Bold",sans-serif`; x.textAlign='center'; x.textBaseline='middle'; x.fillText('Pizza !',W/2,H*.58);
+      const d=x.getImageData(0,0,W,H).data; P=[]; const step=W<400?4:5;
+      for(let y=0;y<H;y+=step) for(let xx=0;xx<W;xx+=step) if(d[(y*W+xx)*4+3]>128) P.push({tx:xx,ty:y,x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,k:Math.floor(Math.random()*6)}); },
+    (ctx,W,H)=>{ const c=C(); ctx.clearRect(0,0,W,H);
+      for(const q of P){ const dx=q.x-p.x, dy=q.y-p.y, d=Math.hypot(dx,dy);
+        if(d<55&&d>0){ q.vx+=dx/d*2.2; q.vy+=dy/d*2.2; }
+        if(reduce){ q.x=q.tx; q.y=q.ty; } else { q.vx+=(q.tx-q.x)*.04; q.vy+=(q.ty-q.y)*.04; q.vx*=.82; q.vy*=.82; q.x+=q.vx; q.y+=q.vy; }
+        ctx.fillStyle=c.parts[q.k]; ctx.fillRect(q.x-1.6,q.y-1.6,3.2,3.2); } });
+  st.addEventListener('pointerdown',()=>P.forEach(q=>{ q.vx+=(Math.random()-.5)*30; q.vy+=(Math.random()-.5)*30; }));
+  if (document.fonts) document.fonts.ready.then(resize); })();
+
+// 26 Lettres qui sautent
+(function(){ const el=$('jump'), txt=el.textContent; el.textContent=''; el.setAttribute('aria-label',txt);
+  for(const ch of txt){ const s=document.createElement('span'); s.setAttribute('aria-hidden','true'); s.textContent= ch===' ' ? ' ' : ch; el.appendChild(s); }
+  const hop=t=>{ if(reduce||t.classList.contains('j')) return; t.classList.add('j'); t.addEventListener('animationend',()=>t.classList.remove('j'),{once:true}); };
+  function hit(x,y){ const t=document.elementFromPoint(x,y); if(t && t.parentNode===el) hop(t); }
+  el.parentNode.addEventListener('pointermove',e=>hit(e.clientX,e.clientY)); el.addEventListener('pointerdown',e=>hit(e.clientX,e.clientY));
+  const wave=()=>[...el.children].forEach((s,i)=>setTimeout(()=>hop(s),i*70));
+  $('jump-btn').addEventListener('click',wave);
+  new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting){ wave(); o.disconnect(); } },{threshold:.6}).observe(el); })();
+
+// 9 Apparition de la liste des choix
+(function(){ const l=$('list9'); const play=()=>restart(l,'play');
+  $('list9-btn').addEventListener('click',play);
+  new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting){ play(); o.disconnect(); } },{threshold:.5}).observe(l); })();
+
+paint();
+})();
+</script>
+</body>
+</html>

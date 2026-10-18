@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hazardo">
+  <!-- Logo Hazardo : le ticket de manège (palette Grande Roue) -->
+  <g transform="rotate(-8 32 32)">
+    <path d="M9 13H55a4 4 0 0 1 4 4V27a5 5 0 0 0 0 10V47a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V37a5 5 0 0 0 0-10V17a4 4 0 0 1 4-4Z" fill="#D7263D" stroke="#2A1838" stroke-width="3"/>
+    <path d="M20 20h7v9h10v-9h7v24h-7v-9H27v9h-7z" fill="#FFFFFF"/>
+  </g>
+  <path d="M53 2l2.2 5.3L61 9l-5.8 1.7L53 16l-2.2-5.3L45 9l5.8-1.7z" fill="#FFB400" stroke="#2A1838" stroke-width="1.6" stroke-linejoin="round"/>
+</svg>
