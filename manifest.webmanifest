@@ -1,0 +1,15 @@
+{
+  "name": "Hazardo",
+  "short_name": "Hazardo",
+  "description": "La roue qui choisit pour toi quand tu n'arrives pas à te décider.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF6E6",
+  "theme_color": "#FFF6E6",
+  "icons": [
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

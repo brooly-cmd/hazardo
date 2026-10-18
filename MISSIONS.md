@@ -43,7 +43,7 @@ Coche chaque case quand la mission est réussie.
   - **C'est réussi quand :** je crée « Film » avec 3 choix, je reviens sur « Repas » : chaque roue a gardé les siens.
   - **Produit pour la suite :** l'app complète.
 
-- [ ] 7. Comme une vraie app — CONSTRUIT
+- [x] 7. Comme une vraie app — CONSTRUIT
   - **Quoi :** l'icône Hazardo sur l'écran d'accueil de l'iPhone, l'ouverture en plein écran (sans la barre Safari),
     et le nom « Hazardo » sous l'icône.
   - **Pourquoi :** c'est la « carte d'identité » de l'app (un petit fichier appelé manifest) :

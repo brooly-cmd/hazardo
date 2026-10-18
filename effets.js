@@ -45,7 +45,10 @@ const toile = (() => {
 /* ---------- 27 Jour / nuit ---------- */
 const sombreIphone = matchMedia('(prefers-color-scheme: dark)');
 function estNuit(){ const t = document.documentElement.dataset.theme; return t ? t === 'dark' : sombreIphone.matches; }
-function majTheme(){ const n = estNuit(); document.body.classList.toggle('nuit', n); $('jn').setAttribute('aria-pressed', n); toile.couleurs(); }
+function majTheme(){ const n = estNuit(); document.body.classList.toggle('nuit', n); $('jn').setAttribute('aria-pressed', n); toile.couleurs();
+  // Le haut de l'écran (barre d'état, app installée) prend la couleur du fond, jour ou nuit.
+  const fond = getComputedStyle(document.documentElement).getPropertyValue('--fond').trim();
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.content = fond); }
 $('jn').addEventListener('click', () => { document.documentElement.dataset.theme = estNuit() ? 'light' : 'dark'; majTheme(); });
 sombreIphone.addEventListener('change', majTheme);
 majTheme();

@@ -38,6 +38,8 @@ qui accompagne un débutant et explique avec des analogies.
    Pour vérifier, lis le texte de la page (pas de capture d'écran) ; prends au maximum
    2 captures en tout, seulement pour vérifier le look. Teste l'essentiel, sans répéter.
 2. Remets la page en ligne si elle l'est déjà.
+   Avant, augmente le numéro de version dans index.html (style.css?v=7 → ?v=8, pareil pour chaque
+   fichier .js et le manifest), pour que les navigateurs prennent toujours la dernière version.
 3. Coche la mission dans MISSIONS.md.
 4. Fais une sauvegarde git nommée "Mission N : <titre>" (une sauvegarde git = un point de
    retour, comme une sauvegarde de jeu vidéo : on peut toujours revenir à ce moment-là).

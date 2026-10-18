@@ -7,10 +7,18 @@
 <meta name="description" content="Hazardo, la roue qui choisit pour toi quand tu n'arrives pas à te décider.">
 <link rel="icon" href="favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- Mission 7 : comme une vraie app (icône, nom et plein écran sur l'écran d'accueil) -->
+<link rel="manifest" href="manifest.webmanifest?v=7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hazardo">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FFF6E6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A0F2E" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 <canvas id="toile" aria-hidden="true"></canvas>
@@ -101,10 +109,10 @@
   </div>
 </div>
 
-<script src="stockage.js"></script>
-<script src="roue.js"></script>
-<script src="effets.js"></script>
-<script src="choix.js"></script>
-<script src="roues.js"></script>
+<script src="stockage.js?v=7"></script>
+<script src="roue.js?v=7"></script>
+<script src="effets.js?v=7"></script>
+<script src="choix.js?v=7"></script>
+<script src="roues.js?v=7"></script>
 </body>
 </html>
