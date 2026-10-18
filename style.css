@@ -1,0 +1,135 @@
+/* Hazardo — le look (couleurs, polices et formes de DESIGN.md) */
+
+/* ---------- Couleurs (palette Grande Roue) ---------- */
+:root{
+  --fond:#FFF6E6; --texte:#2A1838; --princ:#D7263D; --princ-fonce:#9C1527;
+  --accent:#FFB400; --douce:#FFE3CC; --sur-princ:#FFFFFF; --voile:rgba(42,24,56,.55);
+  --titre:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif;
+  --corps:"Nunito","Arial Rounded MT Bold",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --fond:#1A0F2E; --texte:#FFF2DF; --princ:#FF4D61; --princ-fonce:#A82238;
+    --accent:#FFC233; --douce:#33204F; --sur-princ:#2A1838; --voile:rgba(8,4,18,.72);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --fond:#1A0F2E; --texte:#FFF2DF; --princ:#FF4D61; --princ-fonce:#A82238;
+  --accent:#FFC233; --douce:#33204F; --sur-princ:#2A1838; --voile:rgba(8,4,18,.72);
+  color-scheme:dark;
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--fond);color:var(--texte);font:700 1rem/1.45 var(--corps);
+  min-height:100svh;-webkit-tap-highlight-color:transparent;transition:background-color .4s}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:default}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}
+
+/* 81 Toile élastique : derrière tout, ne capte pas les touchers */
+#toile{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:520px;margin:0 auto;
+  padding:max(12px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom));
+  min-height:100svh;display:flex;flex-direction:column}
+
+/* ---------- En-tête ---------- */
+.entete{display:flex;align-items:center;justify-content:space-between;height:56px}
+.marque{display:flex;align-items:center;gap:8px}
+.marque img{width:36px;height:36px}
+.marque h1{margin:0;font:400 1.75rem/1 var(--titre);letter-spacing:.01em}
+
+/* 27 Interrupteur jour / nuit */
+.jn{width:64px;height:34px;border-radius:999px;border:2.5px solid var(--texte);padding:0;
+  background:var(--douce);position:relative;overflow:hidden}
+.jn:disabled{opacity:.5}
+.jn i{position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 2px var(--texte);
+  transition:transform .45s cubic-bezier(.4,1.5,.5,1)}
+.jn b{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--texte);opacity:0;transition:opacity .4s}
+.jn b:nth-of-type(1){left:12px;top:8px} .jn b:nth-of-type(2){left:20px;top:19px} .jn b:nth-of-type(3){left:9px;top:21px}
+.nuit .jn i{transform:translateX(30px);background:var(--texte);
+  box-shadow:inset -7px -3px 0 var(--douce),0 0 0 2px var(--texte)}
+.nuit .jn b{opacity:.9}
+
+/* ---------- Accueil ---------- */
+.ecran{flex:1;display:flex;flex-direction:column;align-items:center}
+#ecran-accueil{gap:14px;padding-top:6px}
+.pastille{margin:0;border-radius:999px;background:var(--douce);padding:7px 18px;font-weight:800;font-size:1.05rem}
+
+.scene{position:relative;width:min(86vw,400px,calc(100svh - 260px));min-width:240px;aspect-ratio:1;margin-top:30px}
+.penche{width:100%;height:100%;border-radius:50%;position:relative;touch-action:pan-y;
+  transition:transform .6s cubic-bezier(.3,1.4,.5,1);will-change:transform}
+#roue{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 0 rgba(42,24,56,.18))}
+#roue text{font-family:var(--titre);font-size:15px}
+/* 4 Reflet brillant : discret au repos, il se calme pendant que la roue tourne */
+.reflet{position:absolute;inset:3%;border-radius:50%;pointer-events:none;mix-blend-mode:soft-light;
+  background:radial-gradient(circle at var(--gx,32%) var(--gy,24%),rgba(255,255,255,.85),rgba(255,255,255,0) 45%);
+  opacity:.35;transition:opacity .4s}
+.penche.vise .reflet{opacity:1}
+.ca-tourne .reflet{opacity:.15}
+/* La flèche (13 Petit pop à chaque part qui passe) */
+.fleche{position:absolute;left:50%;top:-22px;width:46px;margin-left:-23px;z-index:2;
+  transform-origin:50% 12%;filter:drop-shadow(0 3px 0 rgba(42,24,56,.25))}
+.fleche svg{display:block;width:100%}
+.fleche.pop{animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{45%{transform:scale(1.35) rotate(-8deg)}}
+
+/* Bouton principal (6 Aimanté + 16 Onde) */
+.aimant{padding:14px 40px 10px;touch-action:pan-y;transition:transform .8s cubic-bezier(.3,1.45,.45,1)}
+.aimant.suit{transition:transform .15s linear}
+.btn-principal{position:relative;overflow:hidden;border:0;border-radius:999px;
+  background:var(--princ);color:var(--sur-princ);font:400 1.9rem/1 var(--titre);letter-spacing:.02em;
+  padding:18px 54px 17px;box-shadow:0 5px 0 var(--princ-fonce);
+  transition:transform .4s cubic-bezier(.3,1.7,.5,1)}
+.btn-principal:active:not(:disabled){transform:translateY(3px) scale(.97);box-shadow:0 2px 0 var(--princ-fonce);transition:transform .08s}
+/* « Ça tourne… » : le bouton reste enfoncé tant que la roue tourne */
+#tourne{min-width:252px}
+#tourne:disabled{transform:translateY(3px);box-shadow:0 2px 0 var(--princ-fonce);opacity:.8}
+.btn-principal .onde{position:absolute;border-radius:50%;background:currentColor;pointer-events:none;
+  opacity:.4;transform:scale(0);animation:onde .6s ease-out forwards}
+@keyframes onde{to{transform:scale(4);opacity:0}}
+.btn-lien{border:0;background:none;padding:8px 14px;font-weight:800;font-size:1.02rem;
+  text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;border-radius:10px}
+.btn-lien:active{transform:translateY(1px)}
+
+/* ---------- Résultat (par-dessus la roue) ---------- */
+.voile{position:fixed;inset:0;z-index:5;background:var(--voile);display:grid;place-items:center;padding:16px;
+  overflow:hidden;animation:fondu .25s ease-out}
+@keyframes fondu{from{opacity:0}}
+/* La carte a la forme du ticket du logo : deux encoches sur les côtés */
+.ticket{width:min(100%,360px);background:var(--douce);color:var(--texte);text-align:center;
+  padding:28px 22px 24px;border-radius:20px;position:relative;
+  -webkit-mask:radial-gradient(circle 15px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 15px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 15px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 15px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+  animation:arrive .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes arrive{from{transform:scale(.8) rotate(-4deg);opacity:0}}
+.ticket::after{content:"";position:absolute;left:22px;right:22px;top:50%;border-top:2.5px dashed var(--texte);opacity:.35;z-index:-1}
+.ticket .et{margin:0;font-size:1.15rem}
+.gagnant{margin:6px 0 22px;font:400 clamp(2.8rem,14vw,4rem)/1.1 var(--titre);touch-action:pan-y;
+  overflow-wrap:anywhere;background:var(--douce);position:relative}
+.gagnant span{display:inline-block}
+/* 26 Lettres qui sautent */
+.gagnant span.saute{animation:saute .5s cubic-bezier(.3,.7,.4,1) both}
+@keyframes saute{40%{transform:translateY(-16px);color:var(--princ)}}
+.ticket .boutons{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--douce);position:relative}
+.ticket .btn-principal{font-size:1.5rem;padding:15px 44px 14px}
+
+/* Confettis : partent du ticket, éclatent puis retombent */
+.confetti{position:absolute;left:50%;top:42%;width:9px;height:14px;border-radius:2px;pointer-events:none;
+  animation:confetti 1.4s cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes confetti{
+  45%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:1}
+  to{transform:translate(var(--dx),calc(var(--dy) + 140px)) rotate(calc(var(--rot) * 2));opacity:0}
+}
+
+/* ---------- Réduire les animations ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}

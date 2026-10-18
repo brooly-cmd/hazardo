@@ -16,7 +16,7 @@ Coche chaque case quand la mission est réussie.
   - **C'est réussi quand :** j'ouvre maquette.html sur PC et en taille iPhone, et le look me plaît.
   - **Produit pour la suite :** maquette.html validée.
 
-- [ ] 3. La roue qui tourne — CONSTRUIT
+- [x] 3. La roue qui tourne — CONSTRUIT
   - **Quoi :** index.html avec une roue de 6 choix (Pizza, Sushi, Burger, Pâtes, Salade, Tacos).
     Je touche « Tourne ! », la roue tourne, ralentit, s'arrête, et le gagnant s'affiche (écran Résultat).
   - **Pourquoi :** c'est le cœur de l'app, la plus petite version utile.

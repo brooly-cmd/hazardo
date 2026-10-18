@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hazardo</title>
+<meta name="description" content="Hazardo, la roue qui choisit pour toi quand tu n'arrives pas à te décider.">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="toile" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="entete">
+    <div class="marque"><img src="logo.svg" alt=""><h1>Hazardo</h1></div>
+    <button class="jn" id="jn" type="button" aria-pressed="false" aria-label="Mode nuit"><i></i><b></b><b></b><b></b></button>
+  </header>
+
+  <!-- Écran 1 : Accueil -->
+  <main class="ecran" id="ecran-accueil">
+    <p class="pastille" id="nom-roue">Repas</p>
+    <div class="scene">
+      <div class="fleche" id="fleche" aria-hidden="true">
+        <svg viewBox="0 0 46 52"><path d="M5 5h36L23 47z" fill="var(--accent)" stroke="var(--texte)" stroke-width="4" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="penche" id="penche">
+        <svg id="roue" viewBox="-110 -110 220 220" role="img"></svg>
+        <div class="reflet"></div>
+      </div>
+    </div>
+    <div class="aimant" id="aimant"><button class="btn-principal" id="tourne" type="button">Tourne !</button></div>
+  </main>
+</div>
+
+<!-- Écran 2 : Résultat (par-dessus la roue) -->
+<div class="voile" id="ecran-resultat" hidden>
+  <div class="ticket" role="dialog" aria-modal="true" aria-labelledby="gagnant">
+    <p class="et">Et c'est…</p>
+    <p class="gagnant" id="gagnant"></p>
+    <div class="boutons">
+      <button class="btn-principal" id="encore" type="button">Encore !</button>
+      <button class="btn-lien" id="merci" type="button">Super, merci</button>
+    </div>
+  </div>
+</div>
+
+<script src="roue.js"></script>
+<script src="effets.js"></script>
+</body>
+</html>
