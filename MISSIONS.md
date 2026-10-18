@@ -9,7 +9,7 @@ Coche chaque case quand la mission est réussie.
   - **C'est réussi quand :** j'ai collé mon choix et DESIGN.md existe dans le dossier.
   - **Produit pour la suite :** DESIGN.md, logo.svg, l'icône.
 
-- [ ] 2. La maquette — MONTRE
+- [x] 2. La maquette — MONTRE
   - **Quoi :** l'écran d'accueil (la roue + le bouton « Tourne ! ») dessiné dans maquette.html,
     avec mes couleurs, mon logo et mes effets déjà posés. La roue ne tourne pas encore pour de vrai.
   - **Pourquoi :** comme le plan d'une maison avant de poser les briques : on change facilement.
@@ -62,3 +62,4 @@ Coche chaque case quand la mission est réussie.
 ## Plus tard (seulement si je le demande)
 - Un son ou une vibration quand la roue s'arrête.
 - Partager une roue avec un ami.
+- Se souvenir du mode jour / nuit choisi avec l'interrupteur (pour l'instant, il revient au réglage de l'iPhone à chaque ouverture).

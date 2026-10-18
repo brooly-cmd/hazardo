@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hazardo — maquette</title>
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ---------- Couleurs (DESIGN.md, palette Grande Roue) ---------- */
+:root{
+  --fond:#FFF6E6; --texte:#2A1838; --princ:#D7263D; --princ-fonce:#9C1527;
+  --accent:#FFB400; --douce:#FFE3CC; --sur-princ:#FFFFFF; --voile:rgba(42,24,56,.55);
+  --titre:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif;
+  --corps:"Nunito","Arial Rounded MT Bold",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --fond:#1A0F2E; --texte:#FFF2DF; --princ:#FF4D61; --princ-fonce:#A82238;
+    --accent:#FFC233; --douce:#33204F; --sur-princ:#2A1838; --voile:rgba(8,4,18,.72);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --fond:#1A0F2E; --texte:#FFF2DF; --princ:#FF4D61; --princ-fonce:#A82238;
+  --accent:#FFC233; --douce:#33204F; --sur-princ:#2A1838; --voile:rgba(8,4,18,.72);
+  color-scheme:dark;
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--fond);color:var(--texte);font:700 1rem/1.45 var(--corps);
+  min-height:100svh;-webkit-tap-highlight-color:transparent;transition:background-color .4s}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}
+
+/* 81 Toile élastique : derrière tout, ne capte pas les touchers */
+#toile{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:520px;margin:0 auto;
+  padding:max(12px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom));
+  min-height:100svh;display:flex;flex-direction:column}
+
+/* ---------- En-tête ---------- */
+.entete{display:flex;align-items:center;justify-content:space-between;height:56px}
+.marque{display:flex;align-items:center;gap:8px}
+.marque img{width:36px;height:36px}
+.marque h1{margin:0;font:400 1.75rem/1 var(--titre);letter-spacing:.01em}
+
+/* 27 Interrupteur jour / nuit */
+.jn{width:64px;height:34px;border-radius:999px;border:2.5px solid var(--texte);padding:0;
+  background:var(--douce);position:relative;overflow:hidden}
+.jn i{position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 2px var(--texte);
+  transition:transform .45s cubic-bezier(.4,1.5,.5,1)}
+.jn b{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--texte);opacity:0;transition:opacity .4s}
+.jn b:nth-of-type(1){left:12px;top:8px} .jn b:nth-of-type(2){left:20px;top:19px} .jn b:nth-of-type(3){left:9px;top:21px}
+.nuit .jn i{transform:translateX(30px);background:var(--texte);
+  box-shadow:inset -7px -3px 0 var(--douce),0 0 0 2px var(--texte)}
+.nuit .jn b{opacity:.9}
+
+/* ---------- Accueil ---------- */
+.ecran{flex:1;display:flex;flex-direction:column;align-items:center}
+#ecran-accueil{gap:14px;padding-top:6px}
+.pastille{border:0;border-radius:999px;background:var(--douce);padding:7px 18px;font-weight:800;font-size:1.05rem}
+.pastille span{font-size:.8em;margin-left:2px}
+
+.scene{position:relative;width:min(86vw,400px,calc(100svh - 300px));min-width:240px;aspect-ratio:1;margin-top:30px}
+.penche{width:100%;height:100%;border-radius:50%;position:relative;touch-action:pan-y;
+  transition:transform .6s cubic-bezier(.3,1.4,.5,1);will-change:transform}
+#roue{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 0 rgba(42,24,56,.18))}
+#roue text{font-family:var(--titre);font-size:15px}
+/* 4 Reflet brillant */
+.reflet{position:absolute;inset:3%;border-radius:50%;pointer-events:none;mix-blend-mode:soft-light;
+  background:radial-gradient(circle at var(--gx,32%) var(--gy,24%),rgba(255,255,255,.85),rgba(255,255,255,0) 45%);
+  opacity:.35;transition:opacity .4s}
+.penche.vise .reflet{opacity:1}
+/* La flèche (13 Petit pop) */
+.fleche{position:absolute;left:50%;top:-22px;width:46px;margin-left:-23px;z-index:2;
+  transform-origin:50% 12%;filter:drop-shadow(0 3px 0 rgba(42,24,56,.25))}
+.fleche svg{display:block;width:100%}
+.fleche.pop{animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{45%{transform:scale(1.35) rotate(-8deg)}}
+
+/* Bouton principal (6 Aimanté + 16 Onde) */
+.aimant{padding:14px 40px 10px;touch-action:pan-y;transition:transform .8s cubic-bezier(.3,1.45,.45,1)}
+.aimant.suit{transition:transform .15s linear}
+.btn-principal{position:relative;overflow:hidden;border:0;border-radius:999px;
+  background:var(--princ);color:var(--sur-princ);font:400 1.9rem/1 var(--titre);letter-spacing:.02em;
+  padding:18px 54px 17px;box-shadow:0 5px 0 var(--princ-fonce);
+  transition:transform .4s cubic-bezier(.3,1.7,.5,1)}
+.btn-principal:active{transform:translateY(3px) scale(.97);box-shadow:0 2px 0 var(--princ-fonce);transition:transform .08s}
+.btn-principal .onde{position:absolute;border-radius:50%;background:currentColor;pointer-events:none;
+  opacity:.4;transform:scale(0);animation:onde .6s ease-out forwards}
+@keyframes onde{to{transform:scale(4);opacity:0}}
+.btn-lien{border:0;background:none;padding:8px 14px;font-weight:800;font-size:1.02rem;
+  text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;border-radius:10px}
+.btn-lien:active{transform:translateY(1px)}
+
+/* ---------- Résultat (par-dessus la roue) ---------- */
+.voile{position:fixed;inset:0;z-index:5;background:var(--voile);display:grid;place-items:center;padding:16px;
+  animation:fondu .25s ease-out}
+@keyframes fondu{from{opacity:0}}
+/* La carte a la forme du ticket du logo : deux encoches sur les côtés */
+.ticket{width:min(100%,360px);background:var(--douce);color:var(--texte);text-align:center;
+  padding:28px 22px 24px;border-radius:20px;position:relative;
+  -webkit-mask:radial-gradient(circle 15px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 15px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 15px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 15px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+  animation:arrive .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes arrive{from{transform:scale(.8) rotate(-4deg);opacity:0}}
+.ticket::after{content:"";position:absolute;left:22px;right:22px;top:50%;border-top:2.5px dashed var(--texte);opacity:.35;z-index:-1}
+.ticket .et{margin:0;font-size:1.15rem}
+.gagnant{margin:6px 0 22px;font:400 clamp(2.8rem,14vw,4rem)/1.1 var(--titre);touch-action:pan-y;
+  overflow-wrap:anywhere;background:var(--douce);position:relative}
+.gagnant span{display:inline-block}
+/* 26 Lettres qui sautent */
+.gagnant span.saute{animation:saute .5s cubic-bezier(.3,.7,.4,1) both}
+@keyframes saute{40%{transform:translateY(-16px);color:var(--princ)}}
+.ticket .boutons{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--douce);position:relative}
+.ticket .btn-principal{font-size:1.5rem;padding:15px 44px 14px}
+
+/* ---------- Liste (Modifier les choix) ---------- */
+#ecran-liste{align-items:stretch;gap:14px;padding-top:4px}
+#ecran-liste .btn-lien{align-self:flex-start;padding-left:0}
+#ecran-liste h2{margin:0;font:400 1.8rem/1.15 var(--titre)}
+.ajout{display:flex;gap:8px}
+.ajout input{flex:1;min-width:0;border:2.5px solid var(--texte);border-radius:14px;background:var(--fond);
+  color:var(--texte);font:700 1rem var(--corps);padding:12px 14px}
+.ajout input::placeholder{color:color-mix(in srgb,var(--texte) 55%,transparent)}
+.btn-ajout{border:0;border-radius:999px;background:var(--princ);color:var(--sur-princ);
+  font-weight:800;padding:0 20px;box-shadow:0 4px 0 var(--princ-fonce)}
+.btn-ajout:active{transform:translateY(3px);box-shadow:0 1px 0 var(--princ-fonce)}
+.compteur{margin:0;font-size:.95rem}
+.choix{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.choix li{display:flex;align-items:center;gap:12px;background:var(--douce);border-radius:16px;padding:6px 6px 6px 14px}
+.choix .pt{width:16px;height:16px;border-radius:50%;flex:none;box-shadow:0 0 0 2px var(--texte)}
+.choix .nom{flex:1;font-weight:800;font-size:1.08rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.choix button{width:40px;height:40px;border:0;border-radius:12px;background:transparent;font-size:1.1rem}
+.choix button:active{background:var(--fond)}
+/* 9 Apparition */
+.choix.apparait li{animation:monte .5s cubic-bezier(.3,1.45,.5,1) both;animation-delay:calc(var(--i)*80ms)}
+@keyframes monte{from{opacity:0;transform:translateY(18px)}}
+
+/* ---------- Outil de maquette (disparaît à la mission 3) ---------- */
+.outil{position:relative;z-index:1;margin:22px auto 0;width:max-content;max-width:100%;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;
+  border:2px dashed color-mix(in srgb,var(--texte) 45%,transparent);border-radius:14px;padding:8px 10px;font-size:.85rem}
+.outil span{margin-right:2px}
+.outil button{border:0;border-radius:999px;background:var(--douce);padding:5px 10px;font-weight:800}
+.outil button[aria-current="true"]{background:var(--texte);color:var(--fond)}
+
+/* ---------- Réduire les animations ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<canvas id="toile" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="entete">
+    <div class="marque"><img src="logo.svg" alt=""><h1>Hazardo</h1></div>
+    <button class="jn" id="jn" type="button" aria-pressed="false" aria-label="Mode nuit"><i></i><b></b><b></b><b></b></button>
+  </header>
+
+  <!-- Écran 1 : Accueil -->
+  <main class="ecran" id="ecran-accueil">
+    <button class="pastille" type="button">Repas <span aria-hidden="true">▾</span></button>
+    <div class="scene">
+      <div class="fleche" id="fleche" aria-hidden="true">
+        <svg viewBox="0 0 46 52"><path d="M5 5h36L23 47z" fill="var(--accent)" stroke="var(--texte)" stroke-width="4" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="penche" id="penche">
+        <svg id="roue" viewBox="-110 -110 220 220" role="img" aria-label="La roue Repas : Pizza, Sushi, Burger, Pâtes, Salade, Tacos"></svg>
+        <div class="reflet"></div>
+      </div>
+    </div>
+    <div class="aimant" id="aimant"><button class="btn-principal" id="tourne" type="button">Tourne !</button></div>
+    <button class="btn-lien" type="button" data-voir="liste">Modifier les choix</button>
+  </main>
+
+  <!-- Écran 3 : Modifier les choix -->
+  <main class="ecran" id="ecran-liste" hidden>
+    <button class="btn-lien" type="button" data-voir="accueil">← Retour à la roue</button>
+    <h2>Les choix de « Repas »</h2>
+    <form class="ajout" onsubmit="return false">
+      <input type="text" maxlength="30" placeholder="Ajoute un choix…" aria-label="Nouveau choix">
+      <button class="btn-ajout" type="submit">Ajouter</button>
+    </form>
+    <p class="compteur">6 choix sur 12</p>
+    <ul class="choix" id="choix"></ul>
+  </main>
+
+  <nav class="outil" aria-label="Outil de maquette">
+    <span>Maquette, voir :</span>
+    <button type="button" data-voir="accueil" aria-current="true">Accueil</button>
+    <button type="button" data-voir="resultat">Résultat</button>
+    <button type="button" data-voir="liste">Liste</button>
+  </nav>
+</div>
+
+<!-- Écran 2 : Résultat -->
+<div class="voile" id="ecran-resultat" hidden>
+  <div class="ticket" role="dialog" aria-modal="true" aria-labelledby="gagnant">
+    <p class="et">Et c'est…</p>
+    <p class="gagnant" id="gagnant">Pizza !</p>
+    <div class="boutons">
+      <button class="btn-principal" type="button" data-voir="accueil">Encore !</button>
+      <button class="btn-lien" type="button" data-voir="accueil">Super, merci</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const souris = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const CHOIX = ['Pizza','Sushi','Burger','Pâtes','Salade','Tacos'];
+const PARTS = [['#D7263D','#FFFFFF'],['#FFB400','#2A1838'],['#1F6FD1','#FFFFFF'],
+               ['#FF8A00','#2A1838'],['#7B3FC4','#FFFFFF'],['#3CC47C','#2A1838']];
+const couleur = nom => getComputedStyle(document.documentElement).getPropertyValue(nom).trim();
+
+/* ---------- 27 Jour / nuit ---------- */
+const sombreIphone = matchMedia('(prefers-color-scheme: dark)');
+function estNuit(){ const t = document.documentElement.dataset.theme; return t ? t === 'dark' : sombreIphone.matches; }
+function majTheme(){ const n = estNuit(); document.body.classList.toggle('nuit', n); $('jn').setAttribute('aria-pressed', n); toile.couleurs(); }
+$('jn').addEventListener('click', () => { document.documentElement.dataset.theme = estNuit() ? 'light' : 'dark'; majTheme(); });
+sombreIphone.addEventListener('change', majTheme);
+
+/* ---------- La roue (dessin) ---------- */
+function dessinerRoue(){
+  const svg = $('roue'), n = CHOIX.length, R = 100, ns = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const pt = (deg, r) => [Math.cos(deg * Math.PI / 180) * r, Math.sin(deg * Math.PI / 180) * r];
+  svg.textContent = '';
+  CHOIX.forEach((nom, i) => {
+    const debut = -90 + i * 360 / n, fin = debut + 360 / n, milieu = debut + 180 / n, [fond, ecrit] = PARTS[i % 6];
+    const [x1, y1] = pt(debut, R), [x2, y2] = pt(fin, R);
+    svg.append(el('path', { d: `M0 0L${x1} ${y1}A${R} ${R} 0 0 1 ${x2} ${y2}Z`, fill: fond, stroke: 'var(--texte)', 'stroke-width': 2 }));
+    // Le texte se lit toujours de gauche à droite : à gauche de la roue, on le retourne.
+    const gauche = milieu > 90 && milieu < 270;
+    const t = el('text', { transform: `rotate(${gauche ? milieu + 180 : milieu})`, x: gauche ? -90 : 90,
+      'text-anchor': gauche ? 'start' : 'end', 'dominant-baseline': 'central', fill: ecrit });
+    t.textContent = nom; svg.append(t);
+  });
+  svg.append(el('circle', { r: R, fill: 'none', stroke: 'var(--texte)', 'stroke-width': 3.5 }));
+  for (let i = 0; i < 12; i++){ const [x, y] = pt(i * 30 - 90, R);
+    svg.append(el('circle', { cx: x, cy: y, r: 4.2, fill: 'var(--accent)', stroke: 'var(--texte)', 'stroke-width': 1.6 })); }
+  svg.append(el('circle', { r: 17, fill: 'var(--fond)', stroke: 'var(--texte)', 'stroke-width': 3.5 }));
+  svg.append(el('path', { d: 'M0-9l2.6 5.6 6.1.7-4.5 4.2 1.2 6L0 4.5l-5.4 3 1.2-6-4.5-4.2 6.1-.7z', fill: 'var(--accent)', stroke: 'var(--texte)', 'stroke-width': 1.3, 'stroke-linejoin': 'round' }));
+  // Un nom trop long pour sa part est coupé avec « … »
+  svg.querySelectorAll('text').forEach(t => { const full = t.textContent; let k = full.length;
+    while (k > 1 && t.getComputedTextLength() > 64){ t.textContent = full.slice(0, --k) + '…'; } });
+}
+dessinerRoue();
+document.fonts && document.fonts.ready.then(dessinerRoue);
+
+/* ---------- 4 Reflet brillant (+ penche légère, 8° max) ---------- */
+const penche = $('penche');
+if (!reduit){
+  const bouge = e => { const r = penche.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    penche.classList.add('vise'); penche.style.transition = 'transform .1s linear';
+    penche.style.transform = `perspective(800px) rotateX(${((.5 - y) * 16).toFixed(1)}deg) rotateY(${((x - .5) * 16).toFixed(1)}deg)`;
+    penche.style.setProperty('--gx', x * 100 + '%'); penche.style.setProperty('--gy', y * 100 + '%'); };
+  const repos = () => { penche.classList.remove('vise'); penche.style.transition = ''; penche.style.transform = '';
+    penche.style.removeProperty('--gx'); penche.style.removeProperty('--gy'); };
+  penche.addEventListener('pointermove', bouge);
+  penche.addEventListener('pointerdown', bouge);
+  penche.addEventListener('pointerleave', repos);
+  penche.addEventListener('pointercancel', repos);
+  penche.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') repos(); });
+}
+
+/* ---------- 6 Bouton aimanté (PC seulement, ralenti) ---------- */
+const aimant = $('aimant'), tourne = $('tourne');
+if (souris && !reduit){
+  aimant.addEventListener('pointermove', e => { const r = tourne.getBoundingClientRect();
+    aimant.classList.add('suit');
+    aimant.style.transform = `translate(${((e.clientX - r.left - r.width / 2) * .14).toFixed(1)}px,${((e.clientY - r.top - r.height / 2) * .2).toFixed(1)}px)`; });
+  aimant.addEventListener('pointerleave', () => { aimant.classList.remove('suit'); aimant.style.transform = ''; });
+}
+
+/* ---------- 16 Onde au toucher + 13 Pop de la flèche ---------- */
+function onde(e){ const b = e.currentTarget, r = b.getBoundingClientRect(), s = Math.max(r.width, r.height), w = document.createElement('span');
+  w.className = 'onde'; w.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  b.append(w); setTimeout(() => w.remove(), 650); }
+document.querySelectorAll('.btn-principal').forEach(b => b.addEventListener('pointerdown', onde));
+function pop(){ const f = $('fleche'); f.classList.remove('pop'); void f.offsetWidth; f.classList.add('pop'); }
+// Maquette : la roue ne tourne pas encore ; la flèche fait 3 « pop » comme si 3 parts passaient dessous.
+tourne.addEventListener('click', () => { if (reduit) return; [0, 330, 660].forEach(d => setTimeout(pop, d)); });
+
+/* ---------- 26 Lettres qui sautent ---------- */
+const gagnant = $('gagnant');
+gagnant.innerHTML = [...gagnant.textContent].map(c => `<span>${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+const lettres = [...gagnant.children];
+function saute(s, delai){ s.classList.remove('saute'); void s.offsetWidth; s.style.animationDelay = delai + 'ms'; s.classList.add('saute'); }
+function annonce(){ if (!reduit) lettres.forEach((s, i) => saute(s, i * 70)); }
+if (!reduit){
+  gagnant.addEventListener('pointermove', e => { const s = document.elementFromPoint(e.clientX, e.clientY);
+    if (s && s.parentNode === gagnant && s !== gagnant._derniere){ gagnant._derniere = s; saute(s, 0); } });
+  gagnant.addEventListener('pointerleave', () => gagnant._derniere = null);
+}
+
+/* ---------- 9 Apparition (liste) ---------- */
+$('choix').innerHTML = CHOIX.map((nom, i) =>
+  `<li style="--i:${i}"><span class="pt" style="background:${PARTS[i % 6][0]}"></span><span class="nom">${nom}</span><button type="button" aria-label="Retirer ${nom}">✕</button></li>`).join('');
+function apparition(){ const l = $('choix'); l.classList.remove('apparait'); void l.offsetWidth; if (!reduit) l.classList.add('apparait'); }
+
+/* ---------- Passer d'un écran à l'autre (maquette) ---------- */
+let ecranAvant = null;
+function voir(nom){
+  $('ecran-accueil').hidden = nom === 'liste';
+  $('ecran-liste').hidden = nom !== 'liste';
+  $('ecran-resultat').hidden = nom !== 'resultat';
+  document.querySelectorAll('.outil [data-voir]').forEach(b => b.setAttribute('aria-current', b.dataset.voir === nom));
+  toile.active(nom !== 'liste');
+  if (nom === 'resultat'){ ecranAvant = document.activeElement; annonce(); document.querySelector('.ticket .btn-principal').focus(); }
+  else if (ecranAvant){ ecranAvant.focus(); ecranAvant = null; }
+  if (nom === 'liste') apparition();
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-voir]'); if (b) voir(b.dataset.voir); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('ecran-resultat').hidden) voir('accueil'); });
+
+/* ---------- 81 Toile élastique (fond de l'accueil) ---------- */
+const toile = (() => {
+  const cv = $('toile'), ctx = cv.getContext('2d'), PAS = 22, p = { x: -999, y: -999 };
+  let W = 0, H = 0, cols = 0, rows = 0, G = [], trait = '', raf = 0, visible = true;
+  function taille(){ const d = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    cols = Math.ceil(W / PAS) + 1; rows = Math.ceil(H / PAS) + 1; G = [];
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) G.push({ ox: i * PAS, oy: j * PAS, x: i * PAS, y: j * PAS, vx: 0, vy: 0 });
+    dessin(); }
+  function couleurs(){ const hex = couleur('--texte'), n = parseInt(hex.slice(1), 16);
+    trait = `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},.22)`; dessin(); }
+  function physique(){ let agite = false;
+    for (const q of G){ const dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy);
+      if (d < 80 && d > 0){ const f = (80 - d) / 80; q.vx += dx / d * f * 3; q.vy += dy / d * f * 3; }
+      q.vx += (q.ox - q.x) * .08; q.vy += (q.oy - q.y) * .08; q.vx *= .82; q.vy *= .82; q.x += q.vx; q.y += q.vy;
+      if (Math.abs(q.vx) + Math.abs(q.vy) > .02) agite = true; }
+    return agite; }
+  function dessin(){ ctx.clearRect(0, 0, W, H); if (!visible) return;
+    ctx.strokeStyle = trait; ctx.lineWidth = 1; ctx.beginPath();
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++){ const q = G[j * cols + i]; i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y); }
+    for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++){ const q = G[j * cols + i]; j ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y); }
+    ctx.stroke();
+    G.forEach((q, k) => { const m = Math.hypot(q.x - q.ox, q.y - q.oy);
+      if (m > 2){ ctx.fillStyle = PARTS[k % 6][0]; ctx.beginPath(); ctx.arc(q.x, q.y, Math.min(4, 1 + m / 6), 0, 7); ctx.fill(); } }); }
+  // La boucle s'arrête d'elle-même quand la toile est au repos (économise la batterie).
+  function boucle(){ const agite = physique(); dessin(); raf = (agite || p.x > -999) && visible && !document.hidden ? requestAnimationFrame(boucle) : 0; }
+  function reveille(){ if (!raf && !reduit && visible) raf = requestAnimationFrame(boucle); }
+  addEventListener('pointermove', e => { p.x = e.clientX; p.y = e.clientY; reveille(); }, { passive: true });
+  addEventListener('pointerdown', e => { p.x = e.clientX; p.y = e.clientY; reveille(); }, { passive: true });
+  const lache = () => { p.x = p.y = -999; };
+  addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') lache(); });
+  addEventListener('pointercancel', lache);
+  document.addEventListener('pointerleave', lache);
+  document.documentElement.addEventListener('mouseleave', lache);
+  addEventListener('resize', () => { clearTimeout(taille._t); taille._t = setTimeout(taille, 150); });
+  taille();
+  return { couleurs, active(on){ visible = on; if (on) reveille(); dessin(); } };
+})();
+majTheme();
+</script>
+</body>
+</html>
