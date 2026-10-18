@@ -30,7 +30,7 @@ Coche chaque case quand la mission est réussie.
   - **C'est réussi quand :** j'ouvre https://brooly-cmd.github.io/hazardo/ sur mon iPhone et la roue tourne.
   - **Produit pour la suite :** le lien en ligne (les missions suivantes le mettent à jour).
 
-- [ ] 5. Mes propres choix — CONSTRUIT
+- [x] 5. Mes propres choix — CONSTRUIT
   - **Quoi :** l'écran « Modifier les choix » : ajouter, supprimer, gardés dans le navigateur.
   - **Pourquoi :** le stockage du navigateur, c'est comme un carnet rangé dans l'iPhone :
     on le retrouve en revenant, même après avoir fermé Safari.

@@ -6,7 +6,7 @@ const couleur = nom => getComputedStyle(document.documentElement).getPropertyVal
 /* ---------- 81 Toile élastique (fond de l'accueil) ---------- */
 const toile = (() => {
   const cv = $('toile'), ctx = cv.getContext('2d'), PAS = 22, p = { x: -999, y: -999 };
-  let W = 0, H = 0, cols = 0, rows = 0, G = [], trait = '', raf = 0;
+  let W = 0, H = 0, cols = 0, rows = 0, G = [], trait = '', raf = 0, visible = true;
   function taille(){ const d = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
     cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
     cols = Math.ceil(W / PAS) + 1; rows = Math.ceil(H / PAS) + 1; G = [];
@@ -20,7 +20,7 @@ const toile = (() => {
       q.vx += (q.ox - q.x) * .08; q.vy += (q.oy - q.y) * .08; q.vx *= .82; q.vy *= .82; q.x += q.vx; q.y += q.vy;
       if (Math.abs(q.vx) + Math.abs(q.vy) > .02) agite = true; }
     return agite; }
-  function dessin(){ ctx.clearRect(0, 0, W, H);
+  function dessin(){ ctx.clearRect(0, 0, W, H); if (!visible) return;
     ctx.strokeStyle = trait; ctx.lineWidth = 1; ctx.beginPath();
     for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++){ const q = G[j * cols + i]; i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y); }
     for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++){ const q = G[j * cols + i]; j ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y); }
@@ -28,8 +28,8 @@ const toile = (() => {
     G.forEach((q, k) => { const m = Math.hypot(q.x - q.ox, q.y - q.oy);
       if (m > 2){ ctx.fillStyle = PARTS[k % 6][0]; ctx.beginPath(); ctx.arc(q.x, q.y, Math.min(4, 1 + m / 6), 0, 7); ctx.fill(); } }); }
   // La boucle s'arrête d'elle-même quand la toile est au repos ou la page cachée (économise la batterie).
-  function boucle(){ const agite = physique(); dessin(); raf = (agite || p.x > -999) && !document.hidden ? requestAnimationFrame(boucle) : 0; }
-  function reveille(){ if (!raf && !reduit) raf = requestAnimationFrame(boucle); }
+  function boucle(){ const agite = physique(); dessin(); raf = (agite || p.x > -999) && visible && !document.hidden ? requestAnimationFrame(boucle) : 0; }
+  function reveille(){ if (!raf && !reduit && visible) raf = requestAnimationFrame(boucle); }
   addEventListener('pointermove', e => { p.x = e.clientX; p.y = e.clientY; reveille(); }, { passive: true });
   addEventListener('pointerdown', e => { p.x = e.clientX; p.y = e.clientY; reveille(); }, { passive: true });
   const lache = () => { p.x = p.y = -999; };
@@ -38,7 +38,8 @@ const toile = (() => {
   document.documentElement.addEventListener('mouseleave', lache);
   addEventListener('resize', () => { clearTimeout(taille._t); taille._t = setTimeout(taille, 150); });
   taille();
-  return { couleurs };
+  // La toile est le fond de l'accueil : elle s'efface et se met en pause sur l'écran « Modifier les choix ».
+  return { couleurs, active(on){ visible = on; if (on) reveille(); dessin(); } };
 })();
 
 /* ---------- 27 Jour / nuit ---------- */

@@ -1,25 +1,26 @@
 /* Hazardo — la roue : dessin, vrai tirage au sort, rotation et annonce du gagnant */
 const $ = id => document.getElementById(id);
 const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const NOM_ROUE = 'Repas';
-const CHOIX = ['Pizza','Sushi','Burger','Pâtes','Salade','Tacos'];
 // Couleur de chaque part et de son texte (DESIGN.md), puis on recommence au début.
 const PARTS = [['#D7263D','#FFFFFF'],['#FFB400','#2A1838'],['#1F6FD1','#FFFFFF'],
                ['#FF8A00','#2A1838'],['#7B3FC4','#FFFFFF'],['#3CC47C','#2A1838']];
 
 /* ---------- Dessin ---------- */
 // Les parts, leurs noms et les clous tournent ensemble dans « disque » ; le moyeu, lui, reste immobile.
+// Moins de 2 choix : la roue est grise et ne peut pas tourner.
 function dessinerRoue(){
-  const svg = $('roue'), n = CHOIX.length, R = 100, ns = 'http://www.w3.org/2000/svg';
+  const { nom: NOM_ROUE, choix: CHOIX } = carnet.roue(), n = CHOIX.length, grise = n < 2;
+  const svg = $('roue'), R = 100, ns = 'http://www.w3.org/2000/svg';
   const el = (tag, attrs) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
   const pt = (deg, r) => [Math.cos(deg * Math.PI / 180) * r, Math.sin(deg * Math.PI / 180) * r];
   svg.textContent = '';
-  svg.setAttribute('aria-label', `La roue ${NOM_ROUE} : ${CHOIX.join(', ')}`);
+  svg.setAttribute('aria-label', n ? `La roue ${NOM_ROUE} : ${CHOIX.join(', ')}` : `La roue ${NOM_ROUE} est vide`);
   const disque = el('g', { id: 'disque', transform: `rotate(${angle})` });
+  if (n < 2) disque.append(el('circle', { r: R, fill: '#CFC6BE' }));
   CHOIX.forEach((nom, i) => {
-    const debut = -90 + i * 360 / n, fin = debut + 360 / n, milieu = debut + 180 / n, [fond, ecrit] = PARTS[i % 6];
+    const debut = -90 + i * 360 / n, fin = debut + 360 / n, milieu = debut + 180 / n, [fond, ecrit] = grise ? ['#CFC6BE','#2A1838'] : PARTS[i % 6];
     const [x1, y1] = pt(debut, R), [x2, y2] = pt(fin, R);
-    disque.append(el('path', { d: `M0 0L${x1} ${y1}A${R} ${R} 0 0 1 ${x2} ${y2}Z`, fill: fond, stroke: 'var(--texte)', 'stroke-width': 2, 'data-part': i }));
+    if (!grise) disque.append(el('path', { d: `M0 0L${x1} ${y1}A${R} ${R} 0 0 1 ${x2} ${y2}Z`, fill: fond, stroke: 'var(--texte)', 'stroke-width': 2, 'data-part': i }));
     // Au repos, le texte se lit de gauche à droite : à gauche de la roue, on le retourne.
     const gauche = milieu > 90 && milieu < 270;
     const t = el('text', { transform: `rotate(${gauche ? milieu + 180 : milieu})`, x: gauche ? -90 : 90,
@@ -34,6 +35,8 @@ function dessinerRoue(){
   // Un nom trop long pour sa part est coupé avec « … » (il reste en entier dans le résultat).
   svg.querySelectorAll('text').forEach(t => { const full = t.textContent; let k = full.length;
     while (k > 1 && t.getComputedTextLength() > 64){ t.textContent = full.slice(0, --k) + '…'; } });
+  $('nom-roue').textContent = NOM_ROUE;
+  tourne.disabled = grise; $('aimant').hidden = grise; $('trop-peu').hidden = !grise; $('modifier').hidden = grise;
 }
 
 /* ---------- Le tirage et la rotation ---------- */
@@ -41,8 +44,8 @@ let angle = 0; // où en est la roue, en degrés (elle ne revient jamais en arri
 const tourne = $('tourne');
 
 function tourner(){
-  if (document.body.classList.contains('ca-tourne')) return;
-  const n = CHOIX.length, part = 360 / n;
+  const CHOIX = carnet.roue().choix, n = CHOIX.length, part = 360 / n;
+  if (document.body.classList.contains('ca-tourne') || n < 2) return;
   // 1. Le vrai tirage au sort : chaque choix a exactement la même chance.
   const gagnant = Math.floor(Math.random() * n);
   // 2. L'angle où le milieu de la part gagnante arrive pile sous la flèche (en haut).
@@ -68,7 +71,7 @@ function tourner(){
 // Pendant que ça tourne, on ne peut rien toucher d'autre.
 function verrouiller(on){
   document.body.classList.toggle('ca-tourne', on);
-  tourne.disabled = on; $('jn').disabled = on;
+  tourne.disabled = on; $('jn').disabled = on; $('modifier').disabled = on;
   tourne.textContent = on ? 'Ça tourne…' : 'Tourne !';
 }
 
@@ -88,6 +91,5 @@ $('encore').addEventListener('click', () => { fermerResultat(); tourner(); });
 $('merci').addEventListener('click', fermerResultat);
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !resultat.hidden) fermerResultat(); });
 
-$('nom-roue').textContent = NOM_ROUE;
 dessinerRoue();
 document.fonts && document.fonts.ready.then(dessinerRoue);

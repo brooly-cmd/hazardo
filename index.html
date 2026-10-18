@@ -34,6 +34,29 @@
       </div>
     </div>
     <div class="aimant" id="aimant"><button class="btn-principal" id="tourne" type="button">Tourne !</button></div>
+    <div class="trop-peu" id="trop-peu" hidden>
+      <p>Ajoute au moins 2 choix pour faire tourner la roue.</p>
+      <button class="btn-ajout" type="button" data-ouvre-liste>Ajouter des choix</button>
+    </div>
+    <button class="btn-lien" id="modifier" type="button" data-ouvre-liste>Modifier les choix</button>
+  </main>
+
+  <!-- Écran 3 : Modifier les choix -->
+  <main class="ecran" id="ecran-liste" hidden>
+    <button class="btn-lien" id="retour" type="button">← Retour à la roue</button>
+    <h2 id="titre-liste" tabindex="-1"></h2>
+    <form class="ajout" id="ajout" novalidate>
+      <input id="nouveau" type="text" placeholder="Ajoute un choix…" aria-label="Nouveau choix"
+        aria-describedby="erreur" autocomplete="off" enterkeyhint="done">
+      <button class="btn-ajout" type="submit">Ajouter</button>
+    </form>
+    <p class="erreur" id="erreur" role="alert"></p>
+    <div class="compteur">
+      <p id="compteur"></p>
+      <span class="ampoules" id="ampoules" aria-hidden="true"></span>
+    </div>
+    <p class="vide" id="vide" hidden>Ta roue est vide. Ajoute au moins 2 choix pour la faire tourner.</p>
+    <ul class="choix" id="choix"></ul>
   </main>
 </div>
 
@@ -49,7 +72,9 @@
   </div>
 </div>
 
+<script src="stockage.js"></script>
 <script src="roue.js"></script>
 <script src="effets.js"></script>
+<script src="choix.js"></script>
 </body>
 </html>
