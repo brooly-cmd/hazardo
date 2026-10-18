@@ -52,7 +52,7 @@ Coche chaque case quand la mission est réussie.
     et l'app s'ouvre en plein écran.
   - **Produit pour la suite :** l'app prête à partager.
 
-- [ ] 8. Test avec un ami — EXÉCUTE
+- [x] 8. Test avec un ami — EXÉCUTE
   - **Quoi :** j'envoie le lien à un ami, il l'essaie sans aide, je note ce qui l'a bloqué ou fait sourire.
   - **Pourquoi :** un regard neuf voit ce que je ne vois plus.
   - **C'est réussi quand :** mon ami a fait tourner une roue et créé ses propres choix tout seul.
@@ -63,3 +63,9 @@ Coche chaque case quand la mission est réussie.
 - Un son ou une vibration quand la roue s'arrête.
 - Partager une roue avec un ami.
 - Se souvenir du mode jour / nuit choisi avec l'interrupteur (pour l'instant, il revient au réglage de l'iPhone à chaque ouverture).
+- « On peut mieux faire » (mon avis après le test) : à préciser ensemble avant de coder quoi que ce soit.
+
+### Retours du test avec un ami (mission 8)
+- 😊 Il a trouvé l'app jolie, avec de beaux effets.
+- 😊 La roue tourne bien.
+- Rien ne l'a bloqué, il n'a rien demandé de plus.
