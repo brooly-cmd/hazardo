@@ -35,7 +35,7 @@ function dessinerRoue(){
   // Un nom trop long pour sa part est coupé avec « … » (il reste en entier dans le résultat).
   svg.querySelectorAll('text').forEach(t => { const full = t.textContent; let k = full.length;
     while (k > 1 && t.getComputedTextLength() > 64){ t.textContent = full.slice(0, --k) + '…'; } });
-  $('nom-roue').textContent = NOM_ROUE;
+  $('nom-roue-texte').textContent = NOM_ROUE;
   tourne.disabled = grise; $('aimant').hidden = grise; $('trop-peu').hidden = !grise; $('modifier').hidden = grise;
 }
 
@@ -71,7 +71,7 @@ function tourner(){
 // Pendant que ça tourne, on ne peut rien toucher d'autre.
 function verrouiller(on){
   document.body.classList.toggle('ca-tourne', on);
-  tourne.disabled = on; $('jn').disabled = on; $('modifier').disabled = on;
+  tourne.disabled = on; $('jn').disabled = on; $('modifier').disabled = on; $('nom-roue').disabled = on;
   tourne.textContent = on ? 'Ça tourne…' : 'Tourne !';
 }
 

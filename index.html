@@ -23,7 +23,9 @@
 
   <!-- Écran 1 : Accueil -->
   <main class="ecran" id="ecran-accueil">
-    <p class="pastille" id="nom-roue">Repas</p>
+    <button class="pastille" id="nom-roue" type="button">
+      <span id="nom-roue-texte">Repas</span> <span aria-hidden="true">▾</span>
+    </button>
     <div class="scene">
       <div class="fleche" id="fleche" aria-hidden="true">
         <svg viewBox="0 0 46 52"><path d="M5 5h36L23 47z" fill="var(--accent)" stroke="var(--texte)" stroke-width="4" stroke-linejoin="round"/></svg>
@@ -58,6 +60,22 @@
     <p class="vide" id="vide" hidden>Ta roue est vide. Ajoute au moins 2 choix pour la faire tourner.</p>
     <ul class="choix" id="choix"></ul>
   </main>
+
+  <!-- Écran 4 : Mes roues -->
+  <main class="ecran" id="ecran-roues" hidden>
+    <button class="btn-lien" id="retour-roues" type="button">← Retour à la roue</button>
+    <h2 id="titre-roues" tabindex="-1">Mes roues</h2>
+    <ul class="roues" id="roues"></ul>
+    <p class="seule" id="seule" hidden>Il te faut au moins une roue.</p>
+    <button class="btn-nouvelle" id="nouvelle" type="button">+ Nouvelle roue</button>
+    <form class="ajout" id="form-nouvelle" novalidate hidden>
+      <input id="nom-nouvelle" type="text" placeholder="Nom de la nouvelle roue" aria-label="Nom de la nouvelle roue"
+        aria-describedby="erreur-roue" autocomplete="off" enterkeyhint="done">
+      <button class="btn-ajout" type="submit">Créer</button>
+    </form>
+    <p class="erreur" id="erreur-roue" role="alert"></p>
+    <p class="note">Tes roues sont gardées sur cet appareil seulement.</p>
+  </main>
 </div>
 
 <!-- Écran 2 : Résultat (par-dessus la roue) -->
@@ -72,9 +90,21 @@
   </div>
 </div>
 
+<!-- Confirmation de suppression (par-dessus « Mes roues ») -->
+<div class="voile" id="ecran-supprimer" hidden>
+  <div class="ticket" role="alertdialog" aria-modal="true" aria-labelledby="question-supprimer">
+    <p class="question" id="question-supprimer"></p>
+    <div class="boutons">
+      <button class="btn-principal" id="oui-supprimer" type="button">Supprimer</button>
+      <button class="btn-lien" id="non-supprimer" type="button">Annuler</button>
+    </div>
+  </div>
+</div>
+
 <script src="stockage.js"></script>
 <script src="roue.js"></script>
 <script src="effets.js"></script>
 <script src="choix.js"></script>
+<script src="roues.js"></script>
 </body>
 </html>

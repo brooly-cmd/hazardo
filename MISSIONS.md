@@ -37,7 +37,7 @@ Coche chaque case quand la mission est réussie.
   - **C'est réussi quand :** j'ajoute « Kebab », je ferme Safari, je reviens : « Kebab » est toujours là.
   - **Produit pour la suite :** stockage.js (le carnet), réutilisé à la mission 6.
 
-- [ ] 6. Plusieurs roues — CONSTRUIT
+- [x] 6. Plusieurs roues — CONSTRUIT
   - **Quoi :** l'écran « Mes roues » : créer, renommer, supprimer une roue, et passer de l'une à l'autre.
   - **Pourquoi :** une roue « Repas », une roue « Film », une roue « Sortie »… chacune ses choix.
   - **C'est réussi quand :** je crée « Film » avec 3 choix, je reviens sur « Repas » : chaque roue a gardé les siens.

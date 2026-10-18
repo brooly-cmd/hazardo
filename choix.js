@@ -60,16 +60,19 @@ liste.addEventListener('click', e => {
   (suivant || champ).focus();
 });
 
-/* ---------- Aller et revenir entre la roue et la liste ---------- */
+/* ---------- Aller et revenir entre les écrans ---------- */
+// Un seul écran visible à la fois ; la toile élastique n'est le fond que de l'accueil.
+function montrer(id){
+  document.querySelectorAll('.ecran').forEach(e => e.hidden = e.id !== id);
+  toile.active(id === 'ecran-accueil'); scrollTo(0, 0);
+}
 function ouvrirListe(){
-  $('ecran-accueil').hidden = true; $('ecran-liste').hidden = false;
-  toile.active(false); scrollTo(0, 0);
+  montrer('ecran-liste');
   direErreur(''); afficherListe('tout');
   $('titre-liste').focus();
 }
 function fermerListe(){
-  $('ecran-liste').hidden = true; $('ecran-accueil').hidden = false;
-  toile.active(true); scrollTo(0, 0);
+  montrer('ecran-accueil');
   dessinerRoue();
   (tourne.disabled ? document.querySelector('#trop-peu button') : tourne).focus();
 }
