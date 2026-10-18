@@ -24,7 +24,7 @@ Coche chaque case quand la mission est réussie.
     le choix annoncé.
   - **Produit pour la suite :** index.html, style.css, roue.js.
 
-- [ ] 4. Mise en ligne — EXÉCUTE
+- [x] 4. Mise en ligne — EXÉCUTE
   - **Quoi :** mettre Hazardo sur GitHub Pages (dépôt « hazardo », compte brooly-cmd).
   - **Pourquoi :** c'est comme accrocher l'app en vitrine : elle a une adresse que tout le monde peut ouvrir.
   - **C'est réussi quand :** j'ouvre https://brooly-cmd.github.io/hazardo/ sur mon iPhone et la roue tourne.
